@@ -1,2 +1,4 @@
 name: Pirate Sally
 markdown: kramdown
+
+theme: jekyll-theme-architect
