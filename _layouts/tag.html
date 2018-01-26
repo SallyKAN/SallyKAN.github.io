@@ -3,11 +3,11 @@ layout: default
 ---
 <div class="post">
 <p>
-{% for tag in tags %}
+{% for tag in site.tags %}
 <a href="#{{ tag | slugify }}" class="codinfox-tag-mark"> {{ tag }} </a> &nbsp;&nbsp;
 {% endfor %}
 
-{% for tag in tags %}
+{% for tag in site.tags %}
 <h2 id="{{ tag | slugify }}">{{ tag }}</h2>
 <ul class="codinfox-category-list">
   {% for post in site.posts %}
