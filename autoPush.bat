@@ -1,5 +1,6 @@
 call git checkout master
 call git add .
-call git commit -am "made changes"
+set /p message="enter commit message:"
+call git commit -m "%message%"
 call git push
 pause
