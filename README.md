@@ -1,3 +1,3 @@
 # SallyKAN.github.io
-my blog website
-sallykang.com
+My blog website
+[sallykang.com](http://sallykang.com)
