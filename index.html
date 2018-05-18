@@ -3,9 +3,10 @@ layout: default
 title: Sally Kang
 ---
 <ul class="posts">
-    {% for post in site.posts %}
-    
-     <li><span>{{ post.date | date_to_string }}</span> » <a class="index-post-title" href="{{ post.url }}" title="{{ post.title }}">{{ post.title }} </a></li>
-     <span>{{post.content | strip_html | truncatewords: 50}}</span>
+    {% for post in site.posts %}  
+     <br/>
+     <li><span>{{ post.date | date_to_string }}</span> » <a href="{{ post.url }}" title="{{ post.title }}"> <h3> {{ post.title }}</h3> </a></li>
+     {{post.content | strip_html | truncatewords: 50}}
+     <br/>
     {% endfor %}
   </ul>
