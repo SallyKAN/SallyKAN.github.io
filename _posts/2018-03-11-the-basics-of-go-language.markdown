@@ -3,6 +3,7 @@ title: "The basics of Go language"
 layout: post
 date: 2018-3-11
 tags: Go
+image: /img/go.png
 ---
 ### 包 
 

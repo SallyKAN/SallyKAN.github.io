@@ -1,6 +1,7 @@
 ---
 title: How To Run Raspberry Pi 3B with MATLAB.
 tags: RaspberryPi3 MATLAB Linux
+image: /img/ras.png
 ---
 
 # **What you need to prepare**
