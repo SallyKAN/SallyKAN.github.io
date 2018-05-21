@@ -1,7 +1,7 @@
 ---
 title: How to build Go implementation of Ethereum locally
 tags: go-ethereum  Go  govendor
-image: /img/eth.png
+image: "/img/eth.png"
 ---
 
 This post would show how I build go-ethereum on my Win10 computer, and if you  are interested in build, develop, debug, submit a bug report or pull request or contribute code to go-ethereum, you can do this as well.
@@ -13,7 +13,7 @@ If you don't, just download and run the installer found at http://golang.org/doc
 Then you need to set GOPATH and PATH,  search "Environment Variables“ in the start menu, add " PATH_TO_YOUR_GO_DIRECTORY/bin" to PATH variable. 
 Now check if your Go is working right by:
 
-![Cmd windows]({{ "/img/screenshot.png| "C:\Users\K\AppData\Roaming\Sublime Text 3\SallyKAN.github.io\img\screenshot.png"}})" 
+![Cmd windows]({{ "/img/screenshot.png "| "C:\Users\K\AppData\Roaming\Sublime Text 3\SallyKAN.github.io\img\screenshot.png"}})
 
 ## go-ethereum source code
 
