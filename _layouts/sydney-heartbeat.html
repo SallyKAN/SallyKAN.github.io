@@ -9,9 +9,13 @@
     type="text/javascript" charset="utf-8"></script>
     <script src="http://js.api.here.com/v3/3.0/mapsjs-mapevents.js" 
      type="text/javascript" charset="utf-8"></script>
+    <script src="http://js.api.here.com/v3/3.0/mapsjs-ui.js" 
+      type="text/javascript" charset="utf-8"></script>
+    <link rel="stylesheet" type="text/css" 
+      href="http://js.api.here.com/v3/3.0/mapsjs-ui.css" />
   	</head>
   	<body>
-  	<div style="width: 640px; height: 480px" id="mapContainer"></div>
+  	<div style="width: 1200px; height: 480px" id="mapContainer"></div>
   	<script>
     // Initialize the platform object:
     var platform = new H.service.Platform({
@@ -20,28 +24,34 @@
     });
 
     // Obtain the default map types from the platform object
-    var maptypes = platform.createDefaultLayers();
+    var defaultLayers  = platform.createDefaultLayers();
+  //   var mapTileService = platform.getMapTileService({ 'type': 'base' });
+  //   var fleetStyleLayer = mapTileService.createTileLayer(
+  // 				'maptile', 
+  // 				'normal.day', 
+  // 				256, 
+  // 				'png8', 
+  // { 'style': 'fleet' });
 
     // Instantiate (and display) a map object:
     var map = new H.Map(
     document.getElementById('mapContainer'),
-    maptypes.normal.map,
+    defaultLayers.normal.map,
     {
       zoom: 10,
       center: { lng: 151.20732, lat: -33.86785}
     });
-    // map.addLayer(defaultLayers.incidents);
-    map.setBaseLayer(maptypes.satellite.traffic);
-    var mapEvents = new H.mapevents.MapEvents(map);
-
+    var ui = H.ui.UI.createDefault(map, defaultLayers,'en-US');
+    var mapEvents = new H.mapevents.MapEvents(map);  
 // Add event listeners:
 map.addEventListener('tap', function(evt) {
   // Log 'tap' and 'mouse' events:
   console.log(evt.type, evt.currentPointer.type); 
 });
-
+// map.addLayer(defaultLayers.incidents);
 // Instantiate the default behavior, providing the mapEvents object: 
 var behavior = new H.mapevents.Behavior(mapEvents);
+
   </script>
   </body>
 </html>
