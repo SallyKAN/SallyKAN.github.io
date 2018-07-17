@@ -1,6 +1,6 @@
 ---
 title: What is IoTA and Why we need it
-tags: IoTA  Cryptocurrency  Blockchain
+tags: IoTA  IoT Cryptocurrency  Blockchain
 ---
 
 # IoTA
