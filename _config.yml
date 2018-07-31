@@ -1,3 +1,9 @@
 name: Sally-Blog
 theme: jekyll-theme-architect 
 permalink: /blog/:year/:month/:day/:title
+gems:
+  - jekyll-auto-image
+  - jekyll-paginate
+image: /img/image.png
+paginate: 5
+paginate_path: "/blog/page:num/"

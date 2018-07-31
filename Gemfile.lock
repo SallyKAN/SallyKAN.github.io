@@ -96,6 +96,8 @@ GEM
       jekyll (~> 3.3)
       sinatra (~> 1.4)
       sinatra-contrib (~> 1.4)
+    jekyll-auto-image (1.1.3)
+      jekyll
     jekyll-avatar (0.5.0)
       jekyll (~> 3.0)
     jekyll-coffeescript (1.0.2)
@@ -258,6 +260,8 @@ PLATFORMS
 DEPENDENCIES
   github-pages
   jekyll-admin
+  jekyll-auto-image
+  jekyll-paginate
 
 BUNDLED WITH
    1.16.1
