@@ -261,6 +261,7 @@ DEPENDENCIES
   github-pages
   jekyll-admin
   jekyll-auto-image
+  jekyll-feed
   jekyll-paginate
 
 BUNDLED WITH

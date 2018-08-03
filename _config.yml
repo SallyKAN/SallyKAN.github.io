@@ -1,9 +1,11 @@
+repository: SallyKAN/SallyKAN.github.io
 name: Sally-Blog
 theme: jekyll-theme-architect 
 permalink: /blog/:year/:month/:day/:title
-gems:
+plugins:
   - jekyll-auto-image
   - jekyll-paginate
+  - jekyll-feed
 image: /img/image.png
 paginate: 5
 paginate_path: "/blog/page:num/"
