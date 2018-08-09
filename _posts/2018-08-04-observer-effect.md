@@ -3,29 +3,29 @@ title: Observer Effect
 tags: QuantumMechanics
 ---
 
-**Observe him.**
-**Get to know everything about him.** 
-**And be sure of nothing about him.**
-**Stalk him,** 
-**Attract him,**
-**Support him,**
-**Judge him,**
-**Challenge everything he believes in,**
-**Sacrifice everything for what he believes in,**
-**Unlock his heart,** 
-**Run right into his heart,**
-**Influence his thoughts,**
-**Rebuild his minding,**
-**Watch him, **
-**Take away his pride,**
-**And youth.**
+**Observe him.**<br/>
+**Get to know everything about him.** <br/>
+**And be sure of nothing about him.**<br/>
+**Stalk him,** <br/>
+**Attract him,**<br/>
+**Support him,**<br/>
+**Judge him,**<br/>
+**Challenge everything he believes in,**<br/>
+**Sacrifice everything for what he believes in,**<br/>
+**Unlock his heart,** <br/>
+**Run right into his heart,**<br/>
+**Influence his thoughts,**<br/>
+**Rebuild his minding,**<br/>
+**Watch him,**<br/>
+**Take away his pride,**<br/>
+**And youth.**<br/>
  
  
-**Change his whole life forever the moment he was observed.**
-**And then,**
+**Change his whole life forever the moment he was observed.**<br/>
+**And then,**<br/>
 
-**Love him.**
-**Like God damn love him.**
-**Like die to love him.**
+**Love him.**<br/>
+**Like God damn love him.**<br/>
+**Like die to love him.**<br/>
 
-**Like uncertainty principle is the only truth left**
+**Like uncertainty principle is the only truth left**<br/>
