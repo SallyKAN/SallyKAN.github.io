@@ -1,6 +1,6 @@
 ---
 title: Feynman Algorithm
-tags: Feynman
+tags: Feynman Algorithms
 ---
 
 1. Write down the problem.
