@@ -1,6 +1,6 @@
 ---
 title: This Week I Learnt(1)
-tags: What-I-Learnt  Algorithms Golang AI
+tags: What-I-Learnt  Algorithms Go AI
 ---
 
 ## Why

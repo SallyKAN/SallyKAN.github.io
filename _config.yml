@@ -1,4 +1,5 @@
 repository: SallyKAN/SallyKAN.github.io
+markdown: kramdown
 name: Sally-Blog
 theme: jekyll-theme-architect 
 permalink: /blog/:year/:month/:day/:title

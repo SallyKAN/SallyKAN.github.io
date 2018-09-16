@@ -1,6 +1,6 @@
 ---
 title: How to build Go implementation of Ethereum locally
-tags: go-ethereum  Go  govendor
+tags: Ethereum Go
 image: "/img/eth.png"
 ---
 
