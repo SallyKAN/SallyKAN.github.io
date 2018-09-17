@@ -4,7 +4,7 @@ tags: AI
 ---
 
 # **Introduction**
-I've been studying a course unit called Adcanced Signal Processing with deep learning this semester. Actually, it's not my first time to learn about SVM, I have built up some basic understanding of it in the introduction of AI class last semester. However, to be honest, I still feel lost when I come to Lagrangian formulation. Anyway, I am just trying to summary how I understand SVM  with some key concepts.
+I've been studying a course unit called Adcanced Signal Processing with deep learning this semester. Actually, it's not my first time to learn about SVM, I have built up some basic understanding of it in the introduction of AI class last semester. However, to be honest, I still feel lost when I come to Lagrangian formulation. Anyway, I am just trying to some key concepts related to SVM.
 
 In brief, SVM, standing for Support Vector Machine, is  a supervised machine learning algorithm that can be implemented for both classification and regression purposes. SVM are more commonly used in classification problems such as text classification tasks, image recognition.
 
