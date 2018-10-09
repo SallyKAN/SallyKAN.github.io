@@ -143,3 +143,10 @@ pre.prettyprint { padding: 10px !important; margin: 40px; font-size: 12px;}
     text-decoration: none;
     font-size: 25px;
 }
+.mbtablestyle {
+        border-collapse: collapse;
+
+   > table, td, th {
+        border: 1px solid black;
+        }
+}
