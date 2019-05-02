@@ -2,11 +2,10 @@
 layout: post
 title: Ethereum Study Note(1) introduction
 tags:
-- ''
-- Cryptocurrency
 - Blockchain
 - What-I-Learnt
 - Ethereum
+- Cryptocurrency
 ---
 
 # Why start this series
