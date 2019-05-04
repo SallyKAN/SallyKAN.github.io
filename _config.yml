@@ -1,0 +1,12 @@
+repository: SallyKAN/SallyKAN.github.io
+markdown: kramdown
+name: Sally-Blog
+theme: jekyll-theme-architect 
+permalink: /blog/:year/:month/:day/:title
+plugins:
+  - jekyll-auto-image
+  - jekyll-paginate
+  - jekyll-feed
+image: /img/image.png
+paginate: 5
+paginate_path: "/blog/page:num/"

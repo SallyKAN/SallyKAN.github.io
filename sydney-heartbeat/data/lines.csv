@@ -1,0 +1,9 @@
+﻿tfl_line_id,name,colour,hexcolour,textcolour,z_order,displayorder,
+1,"T1 North Shore, Northern and Western Line","rgba(179,99,5,0.7)",#B36305 ,#FFFFFF,1,1,
+2,"T2 Airport, Inner West and South Line","rgba(227,32,23,0.7)",#E32017 ,#FFFFFF,2,2,
+3,T3 Bankstown Line,"rgba(0,120,42,0.7)",#00782A ,#FFFFFF,3,3,
+4,T4 Eastern Suburbs and Illawarra Line,"rgba(160,165,169,0.7)",#A0A5A9 ,#FFFFFF,4,4,
+5,T5 Cumberland Line,"rgba(243,169,187,0.7)",#F3A9BB ,#FFFFFF,5,5,
+6,T6 Carlingford Line,"rgba(155,0,86,0.7)",#9B0056 ,#FFFFFF,6,6,
+7,T7 Olympic Park Line,"rgba(0,0,0,0.7)",#000000 ,#FFFFFF,7,7,
+

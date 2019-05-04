@@ -1,0 +1,330 @@
+Train_Station,Street_Name,Street_Type,Entrance_Type,LAT,LONG,0
+Aberdeen,Macqueen,St,Ramp,-32.16688641,150.8919573,1
+Adamstown,St James,Rd,Ramp,-32.93340162,151.7203474,2
+Albion Park,Princes,Hwy,Ramp,-34.56278202,150.7984185,3
+Allawah,Roberts,Ln,Stairs,-33.96949011,151.1145667,4
+Arlington LR,Grove,St,Path,-33.9020453,151.1381593,5
+Arncliffe,Firth,St,Stairs,-33.93671781,151.1468509,6
+Artarmon,Valetta,Ln,Ramp,-33.80823377,151.1847419,7
+Ashfield,Station,St,Stairs,-33.88739665,151.1258025,8
+Asquith,Pacific,Hwy,Ramp,-33.68848916,151.1079991,9
+Auburn,Rawson,St,Ramp,-33.8492876,151.0332914,10
+Austinmer,Railway,Av,Path,-34.30650136,150.9289071,11
+Awaba,Adelaide,St,Ramp,-33.0129167,151.5421589,12
+Banksia,Railway,St,Ramp,-33.94479129,151.1404987,13
+Bankstown,North,Tce,Ramp,-33.91768635,151.0342697,14
+Bardwell Park,Hartill Law,Av,Stairs,-33.93137824,151.125379,15
+Bargo,Great Southern,Rd,Path,-34.29097858,150.5801756,16
+Beecroft,Wongala,Cr,Path,-33.74904472,151.0663377,17
+Bell,Sandham ,Rd,Ramp,-33.5061656,150.2793612,18
+Bellambi,Bellambi,Ln,Ramp,-34.36261281,150.9101311,19
+Belmore,Burwood,Rd,Stairs,-33.91722736,151.0883244,20
+Berala,Woodburn,Rd,Path,-33.87139384,151.0323272,21
+Beresfield,Lawson,Av,Stairs,-32.79940714,151.6585784,22
+Berowra,Pacific,Hwy,Ramp,-33.62291449,151.1535638,23
+Berry,Station,Rd,Path,-34.78027342,150.6967235,24
+Beverly Hills,King Georges,Rd,Lift,-33.94913026,151.0808291,25
+Bexley North,Bexley,Rd,Stairs,-33.9374812,151.1139261,26
+Birrong,Avalon,St,Stairs,-33.89253644,151.0243134,27
+Blackheath,Great Western,Hwy,Stairs,-33.63397248,150.2845903,28
+Blacktown,First,Av,Stairs,-33.7677336,150.9079689,29
+Blaxland,Wilson,Way,Stairs,-33.74366205,150.6098058,30
+Bomaderry,Meroo,St,Path,-34.85374494,150.6097702,31
+Bombo,Princes,Hwy,Stairs,-34.65868669,150.8537686,32
+Bondi Junction,Grafton,St,Stairs,-33.89099409,151.2482086,33
+Booragul,Fourth,St,Ramp,-32.97169903,151.605168,34
+Bowral,Kirkham ,Rd,Path,-34.47763745,150.4167974,35
+Branxton,Railway,St,Ramp,-32.66209242,151.3455358,36
+Broadmeadow,Brown,Rd,Ramp,-32.92216413,151.7352213,37
+Bullaburra,Railway,Pde,Stairs,-33.72316759,150.4149891,38
+Bulli,Park,Rd,Lift,-34.3338201,150.9149316,39
+Bundanoon,Erith,St,Ramp,-34.6557524,150.2997407,40
+Burradoo,Burradoo,Rd,Ramp,-34.49418573,150.3978582,41
+Burwood,Burwood,Rd,Stairs,-33.87704552,151.1038525,42
+Cabramatta,Railway,Pde,Lift,-33.89459892,150.9388134,43
+Camellia,Grand,Av,Ramp,-33.81918103,151.024141,44
+Campbelltown,Farrow,Rd,Stairs,-34.06302424,150.8144097,45
+Campsie,Beamish,St,Ramp,-33.91039285,151.1035577,46
+Canley Vale,Railway,Pde,Stairs,-33.88723441,150.9434805,47
+Canterbury,Canterbury,Rd,Path,-33.9121163,151.1190137,48
+Capitol Square,Hay,St,Path,-33.87970841,151.2055584,49
+Cardiff,Main,Rd,Path,-32.9412794,151.6628198,50
+Caringbah,Kingsway,,Stairs,-34.04157881,151.121856,51
+Carlingford,James,St,Path,-33.7821273,151.0468442,52
+Carlton,Carlton,Pde,Ramp,-33.96798067,151.1241795,53
+Carramar,Carramar,Av,Path,-33.88431636,150.9605645,54
+Casula,Casula,Rd,Stairs,-33.95004957,150.9121379,55
+Central,Eddy,Av,Stairs,-33.88210298,151.2061254,56
+Chatswood,Orchard,Rd,Lift,-33.79673526,151.1811761,57
+Cheltenham,Cheltenham,Rd,Stairs,-33.75539745,151.0781497,58
+Chester Hil,Chester Hill,Rd,Path,-33.88368818,151.0004627,59
+Circular Quay,Alfred,St,Lift,-33.86124347,151.2107343,60
+Clarendon,Racecource,Rd,Ramp,-33.60844245,150.7878928,61
+Clyde,Berry,St,Ramp,-33.83554673,151.0170387,62
+Coalcliff,Lawrence Hargrave ,Dr,Stairs,-34.24253571,150.977052,63
+Cockle Creek,Lake,Rd,Stairs,-32.94246711,151.6244306,64
+Coledale,Cater,St,Stairs,-34.28989285,150.943031,65
+Como,Railway,Rd,Stairs,-34.00437623,151.068248,66
+Concord West,King,St,Stairs,-33.84795404,151.0851904,67
+Coniston,Gladsone,Av,Ramp,-34.43796566,150.884845,68
+Convention Centre,Darling,Dr,Ramp,-33.87286403,151.1981517,69
+Corrimal,Duff,Pde,Path,-34.37549456,150.9051489,70
+Cowan,Pacific,Hwy,Ramp,-33.59298034,151.171638,71
+Cringila,Central,Rd,Stairs,-34.46708061,150.8799583,72
+Cronulla,Cronulla,St,Path,-34.05535773,151.1514348,73
+Croydon,Hennessy,St,Ramp,-33.88283666,151.1155154,74
+Dapto,Station,St,Path,-34.4923588,150.7922224,75
+Denistone,Gordon,Cr,Path,-33.79951928,151.0867539,76
+Domestic,Keith Smith,Av,Lift,-33.93356911,151.1805681,77
+Doonside,Cross,St,Ramp,-33.76362795,150.8692347,78
+Dora Creek,Main,Rd,Path,-33.0838231,151.5010419,79
+Douglas Park,Camden,Rd,Path,-34.18323382,150.7105466,80
+Dulwich Grove LR,New Canterbury,Rd,Stairs,-33.904761,151.1390021,81
+Dulwich Hill LR,Bedford,Cres,Lift,-33.9106266,151.1405558,82
+Dundas,Kissing Point,Rd,Path,-33.80339752,151.032467,83
+Dungog,Brown,St,Stairs,-32.40249309,151.759251,84
+East Hills,Park,Rd,Ramp,-33.96157358,150.9844493,85
+East Maitland,Melbourne,St,Stairs,-32.74457268,151.5874741,86
+East Richmond,Bourke,St,Stairs,-33.6017457,150.7587291,87
+Eastwood,Railway,Pde,Ramp,-33.78992993,151.0826671,88
+Edgecliff,New South Head,Rd,Path,-33.87893677,151.236154,89
+Edmondson Park,Soliders,Pde,Lift,-33.96930476,150.8588642,90
+Emu Plains,Mackellar,St,Stairs,-33.74552422,150.6713807,91
+Engadine,Princes,Hwy,Ramp,-34.06719539,151.0147353,92
+Epping,Langston,Pl,Path,-33.77254801,151.0822785,93
+Ersineville,Erskineville,Rd,Path,-33.90005302,151.1855565,94
+Exeter,Bundanoon,Rd,Path,-34.61337723,150.3173592,95
+Exhibition Centre,Darling,Dr,Ramp,-33.87677819,151.1994751,96
+Fairfield,The Crescent,,Path,-33.87228222,150.9568998,97
+Fairy Meadow,Elliotts,Rd,Stairs,-34.39505996,150.8964522,98
+Fassifern,Tucker,Cl,Ramp,-32.98557663,151.5808417,99
+Faulconbridge,Great Western,Hwy,Stairs,-33.69633199,150.534567,100
+Fish Market,Miller,St,Path,-33.87046367,151.1921783,101
+Flemington,The Crescent,,Stairs,-33.86389281,151.0702391,102
+Gerringong,Belinda,St,Ramp,-34.74477882,150.8176504,103
+Glebe,Burton,St,Stairs,-33.87707686,151.1875647,104
+Glenbrook,Burfitt,Pde,Ramp,-33.76902646,150.6212638,105
+Glenfield,service road,,Stairs,-33.97173912,150.893269,106
+Gordon,Werona,Av,Ramp,-33.75535054,151.154396,107
+Gosford,Showground,Rd,Stairs,-33.4233302,151.3414142,108
+Goulburn,Park,Rd,Path,-34.75812698,149.7192494,109
+Granville,Memorial,Dr,Ramp,-33.8327767,151.0114916,110
+Green Square,Botany,Rd,Stairs,-33.90581837,151.2030314,111
+Greta,Mansfield,St,Ramp,-32.68667582,151.3840538,112
+Guildford,Military,Rd,Ramp,-33.8538226,150.984647,113
+Gymea,Gymea Bay,Rd,Stairs,-34.03487034,151.0851825,114
+Hamilton,Beaumont ,St,Stairs,-32.91802537,151.7485113,115
+Harris Park,Station W,St,Stairs,-33.82326239,151.0074636,116
+Hawkesbury River,Danger,Rd,Stairs,-33.54700863,151.2267151,117
+Hawthorne LR,Darley,Rd,Path,-33.8795003,151.1471067,118
+Hazelbrook,Great Western,Hwy,Ramp,-33.72308654,150.454017,119
+Heathcote,Princes,Hwy,Ramp,-34.0877856,151.008298,120
+Helensburgh,Tunnel,Rd,Stairs,-34.17714736,150.9940859,121
+Hexham,Maitland ,Rd,Stairs,-32.8287522,151.68432,122
+High Street,High,St,Stairs,-32.7413273,151.5644242,123
+Hilldale,Hilldale,Rd,Ramp,-32.50448435,151.649805,124
+Holsworthy,The Boulevarde,,Lift,-33.96282915,150.9563519,125
+Homebush,Loftus,Cres,Stairs,-33.86641951,151.0864214,126
+Hornsby,Station,St,Path,-33.70347962,151.0980916,127
+Hurlstone Park,Duntroon,St,Path,-33.91018981,151.1325419,128
+Hurstville,Forest,Rd,Ramp,-33.96651714,151.1019021,129
+Ingleburn,Stanley,Rd,Ramp,-33.99742169,150.8643133,130
+International,Departure,Plaza,Escalators,-33.93518102,151.166541,131
+Jannali,Railway,Cres,Path,-34.0158836,151.0647566,132
+John Street Square,Harvey,St,Stairs,-33.86716237,151.192075,133
+Jubilee Park LR,Chapman,Rd,Stairs,-33.87532035,151.1786149,134
+Katoomba,Goldsmith,Pl,Ramp,-33.71194806,150.3121686,135
+Kembla Grange,West Dapto,,Ramp,-34.47012644,150.8177961,136
+Kiama,Railway,Pde,Path,-34.67259919,150.8543663,137
+Killara,Werona,Av,Stairs,-33.76569485,151.1620999,138
+Kings Cross,Victoria,St,Stairs,-33.87403189,151.2225037,139
+Kingsgrove,Kingsgrove,Rd,Stairs,-33.94037591,151.1010846,140
+Kingswood,Richmond,Rd,Stairs,-33.75823344,150.7201166,141
+Kirrawee,Oak,Rd,Path,-34.03491126,151.0710203,142
+Kogarah,Station,St,Stairs,-33.96260526,151.1322014,143
+Koolewong,Glenrock,Pde,Stairs,-33.46613312,151.3184763,144
+Kotara,Kotara,Pl,Ramp,-32.94136917,151.6974634,145
+Lakemba,Railway,Pde,Stairs,-33.919759,151.0761338,146
+Lapstone,Explorers,Rd,Ramp,-33.77327862,150.6426352,147
+Lawson,Lotus,St,Ramp,-33.7189722,150.4296065,148
+Leichhardt North LR,James,St,Lift,-33.87498002,151.1550356,149
+Leightonfield,Christina,Rd,Ramp,-33.88126383,150.984962,150
+Leppingon,Rickard,Rd,Stairs,-33.95443956,150.8082668,151
+Leumeah,Plough Inn,Rd,Path,-34.05031272,150.8307679,152
+Leura,Railway,Pde,Stairs,-33.71212061,150.3311289,153
+Lewisham,Thomas ,St,Stairs,-33.8931095,151.1475983,154
+Lewisham West LR,Smith,St,Path,-33.8937862,151.1433429,155
+Lidcombe,Church,St,Stairs,-33.86338085,151.0445549,156
+Lilyfield LR,Catherine ,St,Stairs,-33.87411594,151.1647681,157
+Linden,Burke,Rd,Stairs,-33.71474436,150.5043663,158
+Lindfield,Lindfield,Av,Stairs,-33.77508734,151.1692302,159
+Lisarow,Railway,Cres,Path,-33.38205966,151.3700717,160
+Lithgow,Railway,Pde,Path,-33.48051667,150.1567066,161
+Liverpool,Moore,St,Path,-33.92314617,150.927698,162
+Lochinvar,Station,Ln,Ramp,-32.72039462,151.4504811,163
+Loftus,Pitt,St,Ramp,-34.04499976,151.0513888,164
+Lysaghts,Recycling,Rd,Stairs,-34.4548118,150.8752141,165
+Macarthur,Menangle ,Rd,Lift,-34.07221782,150.7973884,166
+Macdonaldtown,Burren,St,Stairs,-33.89679186,151.1853862,167
+Macquarie Fields,Railway,Pde,Stairs,-33.98484292,150.8790781,168
+Macquarie Park,Lane Cove,Rd,Lift,-33.78506256,151.1279791,169
+Macquarie University,Herring,Rd,Lift,-33.77716806,151.1180933,170
+Maitland,Station,St,Path,-32.73774765,151.552236,171
+Marayong,Harvey,Rd,Lift,-33.74601717,150.9003098,172
+Marion LR,Marion,St,Path,-33.8839155,151.1449963,173
+Marrickville,Illawarra,Rd,Stairs,-33.91375714,151.1532248,174
+Martin Place,Elizabeth,St,Stairs,-33.86770938,151.2108281,175
+Martins Creek,Grace,Av,Ramp,-32.55848164,151.618412,176
+Marulan,Wollondilly,St,Path,-34.7095012,150.0056778,177
+Mascot,Bourke,St,Escalators,-33.92315812,151.1873628,178
+Meadowbank,Bank,St,Ramp,-33.81555584,151.089916,179
+Medlow Bath,Great Western,Hwy,Stairs,-33.67295305,150.2803919,180
+Menangle,Stevens,Rd,Ramp,-34.12539404,150.7441804,181
+Menangle Park,Racecourse,Av,Ramp,-34.10338167,150.7450798,182
+Merrylands,Terminal,Pl,Ramp,-33.83631419,150.9926662,183
+Metford,McCubbin ,Cl,Lift,-32.76536099,151.6181329,184
+Milsons Point,Ennis,Rd,Ramp,-33.84579562,151.212403,185
+Mindaribba,Tocal,Rd,Ramp,-32.66835055,151.5845537,186
+Minnamurra,North,St,Ramp,-34.62633044,150.8530098,187
+Minto,Somerset,St,Stairs,-34.02722065,150.8423272,188
+Miranda,Kiora,Rd,Stairs,-34.036075,151.1019708,189
+Mittagong,Regent,St,Stairs,-34.45240354,150.4483624,190
+Morisset,Dora,St,Lift,-33.10883807,151.4881562,191
+Mortdale,Cook,Ln,Lift,-33.97104094,151.0808798,192
+Moss Vale,Lackey,Rd,Path,-34.54759291,150.3718707,193
+Mount Colah,Pacific,Hwy,Stairs,-33.67129214,151.1150982,194
+Mount Druitt,North,Pde,Stairs,-33.76883389,150.8195934,195
+Mount Kurring-gai,Pacific,Hwy,Ramp,-33.65376948,151.1365683,196
+Mount Victoria,Station,St,Stairs,-33.58817529,150.256825,197
+Mulgrave,Mulgrave,Rd,Ramp,-33.62649899,150.8298983,198
+Museum,Elizabeth,St,Escalators,-33.87482734,151.209529,199
+Muswellbrook,Market,St,Stairs,-32.26742612,150.8904619,200
+Narara,Narara Valley,Dr,Stairs,-33.39459444,151.3444334,201
+Narwee,Hannans,Rd,Path,-33.9475007,151.0707991,202
+Newcastle Interchange,Charles,St,Path,-32.9239171,151.7593884,203
+Newtown,King,St,Ramp,-33.89787696,151.1788814,204
+Niagara Park,Washington,Av,Stairs,-33.3830702,151.3544041,205
+Normanhurst,Malsbury,Rd,Path,-33.72064788,151.0969021,206
+North Ryde,Delhi,Rd,Escalators,-33.79451462,151.1379238,207
+North Strathfield,Queen,St,Stairs,-33.85916251,151.0885013,208
+North Sydney,Blue,St,Path,-33.84100344,151.2073747,209
+North Wollongong,Porter,St,Lift,-34.41208516,150.8913613,210
+Noth Strathfield,Pomeroy,St,Ramp,-33.85755734,151.0873986,211
+Oak Flats,Stanford,Dr,Ramp,-34.57173048,150.8202085,212
+Oatley,River,Rd,Stairs,-33.98000494,151.0789686,213
+Olympic Park,Murray Rose,Av,Path,-33.84608649,151.0700814,214
+Otford,Lady Carrington ,Rd,Stairs,-34.21052602,151.0059083,215
+Ourimbah,Station,St,Path,-33.35937321,151.3697352,216
+Paddy's Markets,Hay,St,Path,-33.87925467,151.2027407,217
+Padstow,Banks,St,Path,-33.95168459,151.0323447,218
+Panania,Anderson,Av,Ramp,-33.95413352,150.9982975,219
+Parramatta,Darcy,St,Stairs,-33.81698089,151.0046804,220
+Paterson,Main,St,Stairs,-32.60237058,151.6147645,221
+Pendle Hill,Wentworth,Av,Stairs,-33.80127175,150.956549,222
+Pennant Hills,Yarrara,Rd,Path,-33.73771583,151.0726063,223
+Penrith,Combewood,Av,Lift,-33.74985115,150.6965045,224
+Penrose,Kareela,Rd,Path,-34.6721605,150.212086,225
+Penshurst,Bridge,Rd,Stairs,-33.96608121,151.0888374,226
+Petersham,Terminus,St,Stairs,-33.8936064,151.1555418,227
+Picton,Station,St,Lift,-34.17921166,150.6126647,228
+Point Clare,Brisbane Water,Dr,Stairs,-33.44618258,151.3282641,229
+Port Kembla,Old Port,Rd,Ramp,-34.47718852,150.9028567,230
+Port Kembla North,Flinders,St,Stairs,-34.47297995,150.8873269,231
+Punchbowl,Punchbowl,Rd,Stairs,-33.92525226,151.0555798,232
+Pymble,Grandview,St,Stairs,-33.74463831,151.1422732,233
+Pyrmont Bay,Murray,St,Path,-33.869535,151.197707,234
+Quakers Hill,Railway,Pde,Stairs,-33.72721417,150.8858872,235
+Redfern,Lawson,St,Path,-33.891563,151.198824,236
+Regents Park,Park,Rd,Stairs,-33.88311577,151.0237932,237
+Revesby,Marco,Av,Stairs,-33.95231174,151.0152774,238
+Rhodes,Walker,St,Lift,-33.83045691,151.0868768,239
+Richmond,E Market,St,Stairs,-33.59877109,150.7523098,240
+Riverstone,Riverstone,Pde,Path,-33.67905167,150.8604401,241
+Riverwood,Belmore,Rd,Path,-33.9514708,151.0525622,242
+Rockdale,Railway,St,Ramp,-33.95191037,151.1364413,243
+Rooty Hill,Rooty Hill North,Rd,Ramp,-33.77124814,150.8438721,244
+Rosehill,James Ruse,Dr,Stairs,-33.82303843,151.0222311,245
+Roseville,Hill,St,Ramp,-33.78434859,151.1778664,246
+Rozelle Bay LR,The Crescent,,Stairs,-33.8717488,151.1728699,247
+Rydalmere,Brodie,St,Path,-33.81015641,151.0294797,248
+Sandgate,Astra,St,Stairs,-32.87279417,151.7028016,249
+Scarborough,Railway,Av,Stairs,-34.26551615,150.9651941,250
+Schofields,Railway,Trc,Stairs,-33.70418713,150.8739328,251
+Scone,Susan,St,Path,-32.04670656,150.8670728,252
+Sefton,Helen,St,Stairs,-33.88516069,151.0116714,253
+Seven Hills,Prospect,Hwy,Lift,-33.77407161,150.9360893,254
+Shellharbour,Piper,Dr,Lift,-34.59122591,150.8446697,255
+Singleton,Munro,St,Path,-32.57183342,151.1654861,256
+Springwood,Station,St,Ramp,-33.69896475,150.5633045,257
+St James,James,Rd,Stairs,-33.86992775,151.2114985,258
+St Leonards,Sergeants,Ln,Lift,-33.82222391,151.1947607,259
+St Marys,Forrester,Rd,Stairs,-33.76188001,150.7749259,260
+St Peters,Lord,St,Path,-33.90694267,151.1806495,261
+Stanmore,Douglas,St,Ramp,-33.89416485,151.1642047,262
+Stanwell Park,Railway,Cres,Stairs,-34.22614425,150.9810046,263
+Strathfield,Everton,Rd,Stairs,-33.87134403,151.0944811,264
+Summer Hill,Grosvenor ,Cres,Lift,-33.89010644,151.1387528,265
+Sutherland,East,Pde,Path,-34.0315567,151.0573425,266
+Sydenham,Gleeson,Av,Path,-33.9148634,151.1660472,267
+Tahmoor,Pitt,St,Path,-34.22346581,150.5898308,268
+Tallong,Railway,Pde,Path,-34.71837568,150.0860928,269
+Tarro,Woodberry ,Rd,Stairs,-32.80882092,151.6694636,270
+Tascott,Glenrock,Pde,Ramp,-33.45077303,151.3187403,271
+Taverners Hill,Parramatta ,Rd,Lift,-33.8895669,151.145176,272
+Telarah,Johnson,St,Ramp,-32.72323179,151.5398951,273
+Telopea,Sturt,St,Path,-33.79400629,151.041781,274
+Tempe,Richardson,Cres,Stairs,-33.92358032,151.1564713,275
+Teralba,Railway,St,Stairs,-32.96216248,151.6036419,276
+The Star,Pirrama,Rd,Path,-33.8672709,151.1957096,277
+Thirroul,Station,St,Stairs,-34.31786015,150.9193757,278
+Thornleigh,The Esplanade,,Stairs,-33.73180916,151.0781183,279
+Thornton,Karuah ,St,Lift,-32.78356119,151.6399551,280
+Toongabbie,Wentworth,Av,Ramp,-33.78699939,150.9516071,281
+Town Hall,George,St,Stairs,-33.87300204,151.2066961,282
+Towradgi,Towradgi,Rd,Ramp,-34.38408404,150.9016675,283
+Tuggerah,Pacific,Hwy,Ramp,-33.30747496,151.4200755,284
+Turramurra,Rohini,St,Path,-33.73258953,151.1290978,285
+Turrella,Reede,St,Stairs,-33.92977422,151.1404283,286
+Unanderra,Berkeley,Rd,Stairs,-34.45480327,150.8454954,287
+Valley Heights,Great Western,Hwy,Ramp,-33.70385585,150.5840194,288
+Victoria Street,Waller,St,Stairs,-32.75096544,151.5941378,289
+Villawood,River,Av,Stairs,-33.88074082,150.9773471,290
+Vineyard,Bandon,Rd,Ramp,-33.65018802,150.851063,291
+Wahroonga,Redleaf,Av,Stairs,-33.71800187,151.1175185,292
+Waitara,Alexandria,Pde,Path,-33.71028639,151.105246,293
+Wallarobba,Wallarobba Brookfield,Rd,Ramp,-32.49615032,151.6956921,294
+Warabrook,Eucalyptus ,Cr,Ramp,-32.88698384,151.7111872,295
+Waratah,Platt,St,Stairs,-32.90210317,151.731215,296
+Waratah Mills LR,Weston,St,Path,-33.8988126,151.1398647,297
+Warnervale,Warnervale,Rd,Path,-33.24713278,151.4488456,298
+Warrawee,Warrawee,Av,Path,-33.72439373,151.1220398,299
+Warrimoo,Railway,Pde,Stairs,-33.72132609,150.6029511,300
+Warwick Farm,Warwick,St,Stairs,-33.91318088,150.9353246,301
+Waterfall,Kooraban,St,Ramp,-34.13517267,150.994605,302
+Waverton,Bay,Rd,Path,-33.83756728,151.1974683,303
+Wentworth Falls,Railway,Pde,Stairs,-33.70932977,150.3764898,304
+Wentworth Park,Pyrmont Bridge,Rd,Path,-33.8742417,151.1940945,305
+Wentworthville,Wentworth,Av,Ramp,-33.80667668,150.971932,306
+Werrington,Victoria,Ln,Lift,-33.75903757,150.7574454,307
+West Ryde,West,Pde,Ramp,-33.80687546,151.0901576,308
+Westmead,Railway,Pde,Ramp,-33.80819002,150.9877158,309
+Wiley Park,King Georges ,Rd,Ramp,-33.92270486,151.0680185,310
+Windsor,Cox,St,Path,-33.61292723,150.8090296,311
+Wingello,Sydney,St,Path,-34.69201661,150.1582058,312
+Wirragula,Dungog,Rd,Ramp,-32.46292679,151.7424687,313
+Wolli,Brodie Spark,Dr,Stairs,-33.92867126,151.1544432,314
+Wollongong,Crown,St,Path,-34.42582725,150.8886385,315
+Wollstonecraft,Milray,Av,Path,-33.83146743,151.1915732,316
+Wombarra,Morrison,Av,Stairs,-34.27530416,150.9535083,317
+Wondabyne,Wondabyne Wharf,,Ramp,-33.49202131,151.2571482,318
+Woodford,Great Western,Hwy,Ramp,-33.73526715,150.4808855,319
+Woolooware,Swan,St N,Stairs,-34.04741225,151.1437622,320
+Woonona,Park,Rd,Ramp,-34.34932926,150.9151104,321
+Woy Woy,Railway,St,Ramp,-33.48527377,151.3237255,322
+Wyee,Wyee,Rd,Ramp,-33.17984054,151.48724,323
+Wynyard,Jamison,St,Path,-33.86445369,151.2053161,324
+Wyong,Howarth,St,Stairs,-33.28508373,151.4255992,325
+Yagoona,Hume,Hwy,Path,-33.90733106,151.0246767,326
+Yennora,Nelson,Rd,Stairs,-33.86462082,150.9709456,327
+Yerrinbool,Old Hume,Hwy,Path,-34.37159251,150.5434481,328
+Zig Zag,Bells,Rd,Stairs,-33.47184198,150.2021194,329
