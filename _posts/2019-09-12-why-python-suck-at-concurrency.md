@@ -8,7 +8,7 @@ tags:
 
 # Why
 
-Emm...I was heading to talk about this little topic(you sure it is a little topic??) few weeks but you know, procrastination.  Actually I happened to write an assignment in Python for scanning some given domains to get some HTTP header information,  and when the number of given domains exceeding 1000, naturally you want to do it in a concurrent way. 
+Emm...I was heading to talk about this little topic(you sure it is a little topic??) few weeks ago, but you know, procrastination.  Actually I happened to write an assignment in Python for scanning some given domains to get some HTTP header information,  and when the number of given domains exceeding 1000, naturally you want to do it in a concurrent way. 
 
 So, this is where  I started to meet the topic: How you do concurrency in Python? 
 
