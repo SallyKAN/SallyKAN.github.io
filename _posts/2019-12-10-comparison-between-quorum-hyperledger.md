@@ -91,14 +91,16 @@ Use cases of Quorum
 - Banking
 
 ### **Brief Summary**
-|         | HyperLedger Fabric | Quorum  |
-| ------------- |------------|-----------|
-| Architecture | Enormous technology stack including membership services, blockchain services and chaincode services | The blockchain platform on Ethereum with modified services |
-| Privacy      | Achieved by setting up shared channels (each one a ledger) between parties|Achieved by public and individual private state trees|
-| Performance | Maximum TPS is around 500 in v1.0 |Able to process more than 100 transactions per second|
-|Consensus|Uses permissioned voting-based consensus from the pool of other consensus named the lottery-based consensus, uses Raft as a crash fault tolerance consensus|Uses a consensus protocol called “QuorumChain”,uses Raft-based and Istanbul BFT for better fault tolerance|
-| Smart Contracts | Uses “Chaincode” as the business logic of the technology    | Use soft forked version from Ethereum supports both public and private contracts|
-|Use Cases|Enterprise-focused in broad fields|Enterprise-focused in the financial field|
+
+
+Comparison| HyperLedger Fabric | Quorum  
+------------- |------------|-----------
+Architecture | Enormous technology stack including membership services, blockchain services and chaincode services | The blockchain platform on Ethereum with modified services 
+Privacy      | Achieved by setting up shared channels (each one a ledger) between parties|Achieved by public and individual private state trees
+Performance | Maximum TPS is around 500 in v1.0 |Able to process more than 100 transactions per second
+Consensus|Uses permissioned voting-based consensus from the pool of other consensus named the lottery-based consensus, uses Raft as a crash fault tolerance consensus|Uses a consensus protocol called “QuorumChain”,uses Raft-based and Istanbul BFT for better fault tolerance
+Smart Contracts | Uses “Chaincode” as the business logic of the technology    | Use soft forked version from Ethereum supports both public and private contracts
+Use Cases|Enterprise-focused in broad fields|Enterprise-focused in the financial field
 
 ## References
 
