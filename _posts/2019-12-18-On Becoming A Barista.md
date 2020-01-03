@@ -6,7 +6,7 @@ tags: Life  Coffee
 ---
 Breaking news, I just got my barista certificate yesterday! It is very easy (but not cheap) to get such one though, I have been dreaming about this for a long time. 
 
-Yes, I am a coffee nerd. To start with, I fall in love with coffee about 6 or 7 years ago, I was in the last year of my high school and studied intensely every day for the coming national college entrance exam (If you know what that means in China, well...). It was quite stressful, to keep myself efficient and energetic for school, I drank a lot of coffee, I can still remember the brand of coffee that I drank the most is Nestle. 
+Yes, I am a coffee nerd. To start with, I fell in love with coffee about 6 or 7 years ago, I was in the last year of my high school and studied intensely every day for the coming national college entrance exam (If you know what that means in China, well...). It was quite stressful, to keep myself efficient and energetic for school, I drank a lot of coffee, I can still remember the brand of coffee that I drank the most is Nestle. 
 
 Unfortunately, I was drinking the most unhealthy and cheapest type of coffee back then, which means it usually contains artificial sweetener and various creamers. As a result, I gained weight, a lot. But still, I have become addicted to caffeine since then, and probably not gonna quit it until I die.
 
