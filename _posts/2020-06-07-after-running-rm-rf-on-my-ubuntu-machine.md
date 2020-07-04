@@ -8,10 +8,10 @@ tags:
 
 # How it happened
 
-A few days ago, I was working on the code of my project assignment.  In short, this project is to capture traffic traces of smart IoT devices by passively monitoring,  which would then be used to clean and process as the feed of the machine learning model for classification purposes.  One of my tasks is to clean, process, and apply statistics on the collected data, so I have written some scripts to help me fasten and automate the process. 
+A few days ago, I was working on the code of my project assignment.  In short, this project is to capture traffic traces of smart IoT devices by passively monitoring,  which would then be used to clean and process as the feed of the machine learning model for classification purposes. My main tasks include cleanning processing, and applying statistics on the collected data, so I have written some scripts to help me fasten and automate the process. 
 
 
-There is a script called `cal_packets.sh`, so one might infer from the name, the function of this script is to calculate the total number of the captured packets from one specific command.  Considering the data keeps updating, so every time before I run this script, I would like to remove the output directory including the old processed data first. AND THAT'S HOW TRAGEDY HAPPENED.
+There is a script called `cal_packets.sh`, so one might infer from the name, the function of this script is to calculate the total number of the captured packets from one specific command.  Since the data kept updating, so every time before I run this script, I would need to remove the output directory which includes the old processed data first. AND THAT'S HOW THE TRAGEDY HAPPENED.
 
 
 Check out this:
@@ -38,7 +38,7 @@ The first thing I did after this is to check which files are deleted. New lesson
 
 This is quite annoying since hidden directories have many important system and software configurations.   
 
-After I locked my computer and I found out I can't log in to the desktop mode again, as the error message tells `.Xauthority` is somehow not working, it is very likely some important authority files related to the desktop mode have been deleted. 
+After I locked the screen of my computer, I can't log in to the desktop mode again, as the error message tells `.Xauthority` is somehow not working, it is very likely some important authority files related to the desktop mode have been deleted. 
 
 The final solution I used to simply reinstall the desktop 
 
@@ -48,9 +48,9 @@ sudo apt-get install --reinstall ubuntu-desktop
 sudo apt-get install unity
 ```
 
-Then I was able to log in to the desktop interface. 
+Then I was able to log in to the desktop mode again. 
 
-Also, I had to reinstall much software which were deleted. Fortunately, the most important documents on my computer are safe, so this accident is not that bad. However, I can't help but start thinking that what if I delete the valuable data by accident, how to avoid that? And if it happens, how to minimize the loss?  This leads me to the topic **backup**
+Also, I had to reinstall many softwares which were deleted. Fortunately, the most important documents on my computer are safe, so this accident is not that bad. However, I can't help but start thinking that what if I delete the valuable data by accident, how to avoid that? And if it happens, how to minimize the loss?  This leads me to the topic **backup**
 
 
 
