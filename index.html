@@ -12,7 +12,7 @@ title: Sally Kang
     {% for post in paginator.posts %}
   <br/>
      <li><span>{{ post.date | date_to_string }}</span> » <a href="{{ post.url }}" title="{{ post.title }}"> <h3> {{ post.title }}</h3> </a></li>
-     {{ post.content | strip_html | truncatewords: 50 }}
+     {{ post.content | strip_html | truncate: 200 }}
      <br/>
 {% endfor %}
 {% if paginator.total_pages > 1 %}
