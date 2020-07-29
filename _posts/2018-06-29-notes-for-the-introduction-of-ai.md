@@ -1,6 +1,7 @@
 ---
 title: Notes for the introduction of AI
 tags: AI  Algorithms
+lang: en
 ---
 
 ![]({{ "/img/AI-Intro.png "| "C:\Users\K\AppData\Roaming\Sublime Text 3\SallyKAN.github.io\img\AI-Intro.png"}})

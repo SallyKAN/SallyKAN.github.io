@@ -1,6 +1,7 @@
 ---
 layout: post
 title: After running rm -rf  /* on my Ubuntu Machine
+lang: en
 tags:
 - Linux
 - What-I-Learnt

@@ -1,6 +1,7 @@
 ---
 layout: post
 title: A Simple Record of SSH Brute Force
+lang: en
 tags:
 - Linux
 ---

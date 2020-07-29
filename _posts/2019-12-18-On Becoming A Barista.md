@@ -1,6 +1,7 @@
 ---
 layout: post
 title:  On Becoming A Barista
+lang: en
 date:   2019-12-18 18:27:07 +1100
 tags: Life  Coffee
 ---

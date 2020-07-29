@@ -1,6 +1,7 @@
 ---
 layout: post
 title:  Truffle Private Ethereum
+lang: en
 date:   2020-01-03 14:42:14 +1100
 tags: Blockchain Ethereum What-I-Learnt
 ---

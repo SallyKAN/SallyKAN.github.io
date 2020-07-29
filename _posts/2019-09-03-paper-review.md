@@ -2,6 +2,7 @@
 layout: post
 title: Paper Review - Examining How the Great Firewall Discovers Hidden Circumvention
   Servers
+lang: en
 tags:
 - review
 - reading

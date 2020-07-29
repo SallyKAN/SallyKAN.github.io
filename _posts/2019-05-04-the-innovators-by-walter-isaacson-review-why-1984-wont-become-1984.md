@@ -1,5 +1,6 @@
 ---
 title: The Innovators by Walter Isaacson review - Why 1984 won't be like 1984
+lang: en
 tags:
 - reading
 - review

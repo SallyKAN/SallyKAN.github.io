@@ -1,6 +1,7 @@
 ---
 layout: post
 title: About Concurrency In Python
+lang: en
 tags:
 - Python
 - Concurrency

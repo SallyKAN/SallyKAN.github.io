@@ -1,5 +1,6 @@
 ---
 title: Softmax classifier implementation
+lang: en
 tags: Python  AI
 ---
 

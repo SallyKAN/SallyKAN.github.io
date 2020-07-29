@@ -1,6 +1,7 @@
 ---
 title: Notes for Software Quality Engineering
 tags: SoftwareEngineering  Testing
+lang: en
 ---
 
 ![]({{ "/img/SQE.png "| "C:\Users\K\AppData\Roaming\Sublime Text 3\SallyKAN.github.io\img\SQE.png"}})

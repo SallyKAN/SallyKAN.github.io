@@ -1,6 +1,7 @@
 ---
 layout: post
 title: Ethereum Study Note(1) introduction
+lang: en
 tags:
 - Blockchain
 - What-I-Learnt

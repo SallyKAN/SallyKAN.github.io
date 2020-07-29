@@ -1,6 +1,7 @@
 ---
 layout: post
 title: Comparison Between Quorum & Hyperledger
+lang: en
 tags:
 - HyperLedgerFabric
 - Cryptocurrency

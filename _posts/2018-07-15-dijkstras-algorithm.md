@@ -1,6 +1,7 @@
 ---
 title: Dijkstra's Algorithm
 tags: Algorithms Python
+lang: en
 ---
 
 ## What is it for?
