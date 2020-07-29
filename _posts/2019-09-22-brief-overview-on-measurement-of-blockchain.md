@@ -1,6 +1,7 @@
 ---
 layout: post
 title: Brief Overview on Measurement of Blockchain
+lang: en
 tags:
 - Blockchain
 - Ethereum

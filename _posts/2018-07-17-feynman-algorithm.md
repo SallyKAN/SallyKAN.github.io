@@ -1,6 +1,7 @@
 ---
 title: Feynman Algorithm
 tags: Feynman Algorithms
+lang: en
 ---
 
 1. Write down the problem.

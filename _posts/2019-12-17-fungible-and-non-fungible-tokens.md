@@ -1,6 +1,7 @@
 ---
 layout: post
 title: Fungible and Non-Fungible Tokens
+lang: en
 tags:
 - Blockchain
 - Ethereum

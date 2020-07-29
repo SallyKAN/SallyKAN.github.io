@@ -1,5 +1,6 @@
 ---
 title: 'Tor Network: Malicious Exit Relay and DNS Resolution'
+lang: en
 tags:
 - Tor
 - Network

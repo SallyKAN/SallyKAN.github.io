@@ -2,6 +2,7 @@
 title: How to build Go implementation of Ethereum locally
 tags: Ethereum Go
 image: "/img/eth.png"
+lang: en
 ---
 
 This post would show how I build go-ethereum on my Win10 computer, and if you  are interested in build, develop, debug, submit a bug report or pull request or contribute code to go-ethereum, you can do this as well.

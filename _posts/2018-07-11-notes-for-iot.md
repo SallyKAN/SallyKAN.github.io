@@ -1,6 +1,7 @@
 ---
 title: Notes for IoT
 tags: IoT
+lang: en
 ---
 
 ![]({{ "/img/IoT.png "| "C:\Users\K\AppData\Roaming\Sublime Text 3\SallyKAN.github.io\img\IoT.png"}})

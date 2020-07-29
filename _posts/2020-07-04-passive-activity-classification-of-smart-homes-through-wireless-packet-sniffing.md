@@ -2,6 +2,7 @@
 title: |-
   Passive Activity Classification of Smart Homes
   through Wireless Packet Sniffing
+lang: en
 tags:
 - IoT
 - WiFi

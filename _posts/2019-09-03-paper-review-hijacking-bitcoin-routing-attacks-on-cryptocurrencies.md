@@ -1,6 +1,7 @@
 ---
 layout: post
 title: 'Paper Review - Hijacking Bitcoin: Routing Attacks on Cryptocurrencies'
+lang: en
 tags:
 - reading
 - review

@@ -1,6 +1,7 @@
 ---
 title: Slow and Fast Pointer in LinkedList
 tags: Algorithms  Java
+lang: en
 ---
 
 **Slow pointer and fast pointer** are simply the names given to two pointer variables.

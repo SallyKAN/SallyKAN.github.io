@@ -1,6 +1,7 @@
 ---
 title: Observer Effect
 tags: QuantumMechanics
+lang: en
 ---
 
 **Observe him.**<br/>

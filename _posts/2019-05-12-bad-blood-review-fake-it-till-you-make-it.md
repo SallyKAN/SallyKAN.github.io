@@ -1,5 +1,6 @@
 ---
 title: 'Bad Blood Review: Fake It Till You Make It'
+lang: en
 tags:
 - review
 - reading

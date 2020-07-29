@@ -12,19 +12,21 @@ title: Sally Kang
     {% assign enurl=page.url | prepend: '/en' %}
     {% assign zhurl=page.url | prepend:'/zh' %}
   {% endif %}
-
+  
 <ul class="nav nav-pills pull-right">
   <li class="language-chooser"><a href="{{enurl}}">En</a></li>
   <li class="language-chooser" > <a href="{{zhurl}}">中文</a></li>
 </ul>
+
+{% assign posts= site.posts | where:'lang' , 'en' %}
 <ul class="posts">
-    {% for post in paginator.posts %}
+    {% for post in posts %}
   <br/>
      <li><span>{{ post.date | date_to_string }}</span> » <a href="{{ post.url }}" title="{{ post.title }}"> <h3> {{ post.title }}</h3> </a></li>
      {{ post.content | strip_html | truncate: 200 }}
      <br/>
 {% endfor %}
-{% if paginator.total_pages > 1 %}
+<!-- {% if paginator.total_pages > 1 %}
 <div class="pagination">
   {% if paginator.previous_page %}
     <a href="{{ paginator.previous_page_path | prepend: site.baseurl | replace: '//', '/' }}">&laquo; Prev</a>
@@ -48,5 +50,5 @@ title: Sally Kang
     <span>Next &raquo;</span>
   {% endif %}
 </div>
-{% endif %}
+{% endif %} -->
 </ul>

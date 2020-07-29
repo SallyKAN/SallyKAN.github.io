@@ -1,5 +1,6 @@
 ---
 title: About SVM
+lang: en
 tags: AI
 ---
 

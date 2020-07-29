@@ -1,6 +1,7 @@
 ---
 title: This Week I Learnt(1)
 tags: What-I-Learnt  Algorithms Go AI
+lang: en
 ---
 
 ## Why
