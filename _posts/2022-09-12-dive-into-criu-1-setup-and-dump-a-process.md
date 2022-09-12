@@ -1,0 +1,355 @@
+---
+layout: post
+title: Dive into CRIU (1) -  Setup And Dump A Process
+tags:
+- criu
+- Linux
+lang: en
+---
+
+# First, What is CRIU?
+
+If you are wondering how to do time and space travel inside a Linux containers, then I guess this blog is something you might be interested in.
+Checkpoint-Restore in Userspace (or [CRIU](https://github.com/checkpoint-restore)) is a super cool open-source project started by virtualization software company — Virtuozoo — also known for being the creator of OpenVZ.
+
+Considering you are using a Cloud Native Architechture to develop your application, say that is running inside a container, then CRIU is something can freeze a process inside a container and live migrate it to another container (with some constraints, for example the new container must have the same running environment)
+
+# Quick Demo
+
+[how CRIU can dump and restore a TCP connections v2](https://www.youtube.com/watch?v=QIs-3Rtbpps&list=PL86FC0XuGZPISge_th8F5Jjj-IbGXEfE6&index=2)
+
+To find the secret behind CRIU, let's dive deeper into CRIU's source code now :)
+
+# Set up
+
+First let's get the source code from [github](https://github.com/checkpoint-restore/criu). As it mentioned on the official documents [here](https://criu.org/Installation)
+here's a docker-build target in Makefile which builds CRIU in Ubuntu Docker container. Just run make `docker-build` , since we don't want to start a new docker process every single time we play with CRIU,  so add one more line at the end of the Dockerfile which located at `scripts/build` :
+
+`ENTRYPOINT ["tail", "-f", "/dev/null"]`
+
+This would make CRIU container keep running. 
+
+Then we start the CRIU container :
+`docker run --privileged --cap-add=all -d -t criu-x86_64`
+
+**NOTE**: criu needs the root privilege to run inside the container.
+
+# Warm Up 1:  How Does Linux Identify Processes
+
+Now we all probably know that applications deployed in Linux system, no matter what programming languages they are written,  they would end up running in Linux system as processes. This concerns us because that's where all the CRIU stuff could work like a charm. 
+
+We can skip the part of creation of a processes in Linux, but how does Linux identify processes? 
+
+Well ,  a program is identified by its process ID (PID) as well as it’s parent processes ID (PPID), therefore processes can further be categorized into:
+
+- Parent processes – these are processes that create other processes during run-time.
+- Child processes – these processes are created by other processes during run-time.
+
+
+In fact, all information about running process in Linux can be found under the directory `/proc`. You can think `/proc` as a virtual filesystem. It's also referred to as a process information pseudo-file system. It doesn't contain 'real' files but runtimesystem information (e.g. system memory, devices mounted, hardware configuration, etc).
+
+In `/proc`, there are things CRIU need to actually checkpoint/restore a process, including:
+
+```
+/proc/PID/fd
+	Directory, which contains all file descriptors.
+/proc/PID/mem
+	Memory held by this process.
+/proc/PID/maps
+	Memory maps to executables and library files.
+
+...etc.	
+```
+
+
+
+# Warm Up 2:  The ptrace() system call in Linux
+
+By default, CRIU makes use of ptrace to collect process information and stop the process. 
+What you need to know about ptrace:
+
+> The ptrace() system call provides a means by which one process (the "tracer") may observe and control the execution of another process (the "tracee"), and examine and change the tracee's memory and registers. It is primarily used to implement breakpoint debugging and system call tracing.
+> See https://man7.org/linux/man-pages/man2/ptrace.2.html.
+
+# Dumping A Simle Program
+
+Let's start from a simple demo from the official website first:
+
+create a `test.sh`:
+
+```
+$ cat > test.sh <<-EOF
+#!/bin/sh
+while :; do
+    sleep 1
+    date
+done
+EOF
+$ chmod +x test.sh
+$ setsid ./test.sh  < /dev/null &> test.log &
+```
+
+Make a new folder named `test_criu` under the code base directory `./criu`, copy it into the container when building the CRIU image so we don't need to create the same script every time we restart the container.
+
+`COPY test_criu /criu`
+
+After running `docker exec -it $CONTAINER_ID bash`, now we are in the container.
+
+By doing following, You get the pid of the running process
+
+```
+ps -C test.sh
+```
+
+Using this simple command, you can dump the process: 
+
+```
+criu dump -t $pid -vvv -o dump.log && echo OK
+OK
+```
+
+We can see CRIU created a bunch of image files:
+![ee](/img/criu-dump.png)
+
+# Collect Process Tree And Freeze It
+
+## The Mechanics
+
+TL;DR There are three steps:
+
+- **Collect process tree and freeze it**
+- Collect tasks' resources and dump them
+- Cleanup
+
+More details at [CRIU explains checkpont/restore](https://criu.org/Checkpoint/Restore)
+
+### Code Implementation of Collecting Process tree
+
+The entry code located at `./criu/criutools.c`
+
+![entry](/img/criu-entry.png)
+
+So still remember the command we used to dump the process ? 
+
+```
+criu dump -t $pid -vvv -o dump.log 
+```
+
+We passed the pid of our process to the `-t` flag,  `-t` flag can be written as `--tree` as well,  CRIU would then walk though /proc/$pid/task/ directory collecting threads and through the /proc/$pid/task/$tid/children to gathers children recursively. 
+
+```
+-t|--tree PID         checkpoint a process tree identified by PID
+```
+
+The CRIU command options are parsed in `criutools.c` to execute dumping task
+
+```
+if (opts.mode == CR_DUMP
+	if (!opts.tree_id)
+		goto opt_pid_missing;
+		return cr_dump_tasks(opts.tree_id);
+}
+```
+
+Now we jumped into `cr-dump.c` to see what's going on:
+
+```
+/*
+* The collect_pstree will also stop (PTRACE_SEIZE) the tasks
+* thus ensuring that they don't modify anything we collect
+* afterwards.
+*/
+
+if (collect_pstree())
+	goto err;
+```
+
+As you can read [here](https://criu.org/Freezing_the_tree), CRIU supports two different methods for freezing the state of the process and its sub tasks. 
+
+- Capturing them with ptrace
+- Freezing them using freezer cgroup.
+
+By default, CRIU makes use of ptrace to stop the process, so here we just go through with the ptrace method
+
+>  The ptrace() system call provides a means by which one process (the "tracer") may observe and control the execution of another process (the "tracee"), and examine and change the tracee's memory and registers. It is primarily used to implement breakpoint debugging and system call tracing.
+>  See https://man7.org/linux/man-pages/man2/ptrace.2.html
+
+```
+int collect_pstree(void)
+{
+	pid_t pid = root_item->pid->real;
+	int ret = -1;
+	struct proc_status_creds creds;
+
+	timing_start(TIME_FREEZING);
+
+	/*
+	 * wait4() may hang for some reason. Enable timer and fire SIGALRM
+	 * if timeout reached. SIGALRM handler will do  the necessary
+	 * cleanups and terminate current process.
+	 */
+	alarm(opts.timeout);
+
+	if (opts.freeze_cgroup && cgroup_version())
+		goto err;
+
+	pr_debug("Detected cgroup V%d freezer\n", cgroup_v2 ? 2 : 1);
+
+	if (opts.freeze_cgroup && freeze_processes())
+		goto err;
+
+	if (!opts.freeze_cgroup && compel_interrupt_task(pid)) {
+		set_cr_errno(ESRCH);
+		goto err;
+	}
+	....
+```
+
+CRIU uses the request value PTRACE_INTERRUPT and PTRACE_SEIZE  of ptrace():
+
+> See https://man7.org/linux/man-pages/man2/ptrace.2.html						
+
+We can see from the code, CRIU first checks if the `freeze_cgroup` flag is set, if it is not set, the ptree method would be used. 
+
+CRIU send `PTRACE_SEIZE` request using ptree system call with the calling process we want to dump, `PTRACE_SEIZE` does not stop the process but returns the stop signal, a `PTRACE_SEIZE`d process can accept `PTRACE_INTERRUPT` (`PTRACE_INTERRUPT` only works on tracees attached by `PTRACE_SEIZE`), so we can see CRIU send `PTRACE_INTERRUPT` request to actually stop the  process after it has been SEIZEd, also,  the "seized" behavior just we described here will be inherited by all children processes.
+
+```
+ PTRACE_INTERRUPT only works on tracees attached by PTRACE_SEIZE.
+```
+
+```
+int compel_interrupt_task(int pid)
+{
+	int ret;
+
+	ret = ptrace(PTRACE_SEIZE, pid, NULL, 0);
+	if (ret) {
+		/*
+		 * ptrace API doesn't allow to distinguish
+		 * attaching to zombie from other errors.
+		 * All errors will be handled in compel_wait_task().
+		 */
+		pr_warn("Unable to interrupt task: %d (%s)\n", pid, strerror(errno));
+		return ret;
+	}
+
+	/*
+	 * If we SEIZE-d the task stop it before going
+	 * and reading its stat from proc. Otherwise task
+	 * may die _while_ we're doing it and we'll have
+	 * inconsistent seize/state pair.
+	 *
+	 * If task dies after we seize it but before we
+	 * do this interrupt, we'll notice it via proc.
+	 */
+	ret = ptrace(PTRACE_INTERRUPT, pid, NULL, NULL);
+	if (ret < 0) {
+		pr_warn("SEIZE %d: can't interrupt task: %s\n", pid, strerror(errno));
+		if (ptrace(PTRACE_DETACH, pid, NULL, NULL))
+			pr_perror("Unable to detach from %d", pid);
+	}
+
+	return ret;
+}
+```
+
+Once CRIU has done sending `PTRACE_SEIZE` and `PTRACE_INTERRUPT` request in the `compel_interrupt_task` method, it then waits in the `compel_wait_task` method for the task to be actually stopped by parsing and checking the status from `/proc/PID/status`.
+![image](/img/image-20220910175420710.png)
+
+In the `compel_wait_task` method we can see that CRIU also retrieves information about the signal that caused the stop by using `PTRACE_GETSIGINFO` request, it will set the `PTRACE_O_TRACESYSGOOD` option to distinguish syscall-stops from other kinds of ptrace-stops, since it is reliable and does not incur a performance penalty (see more at [here](https://man7.org/linux/man-pages/man2/ptrace.2.html)) 
+
+By doing this, CRIU makes sure that the task is stopped by a supported stop signal and send it again to restore task state before criu intervention.
+
+```
+ret = ptrace(PTRACE_GETSIGINFO, pid, NULL, &si);
+	if (ret < 0) {
+		pr_perror("SEIZE %d: can't read signfo", pid);
+		goto err;
+	}
+
+....
+
+	if (ptrace(PTRACE_SETOPTIONS, pid, NULL, PTRACE_O_TRACESYSGOOD)) {
+		pr_perror("Unable to set PTRACE_O_TRACESYSGOOD for %d", pid);
+		return -1;
+	}
+```
+
+Also worth mentioning,  all the sub-processes and threads of this process would also be stopped by repeating `compel_interrupt_task` and `compel_wait_task` method in a Deep-First-Search manner.
+
+```
+static int collect_threads(struct pstree_item *item)
+{
+	...
+	for (i = 0; i < nr_threads; i++) {
+		...
+		if (!opts.freeze_cgroup && compel_interrupt_task(pid))
+			continue;
+		...
+		ret = compel_wait_task(pid, item_ppid(item), parse_pid_status, NULL, &t_creds.s, NULL);
+		if (ret < 0) {
+			/*
+			 * Here is a race window between parse_threads() and seize(),
+			 * so the task could die for these time.
+			 * Don't worry, will try again on the next attempt. The number
+			 * of attempts is restricted, so it will exit if something
+			 * really wrong.
+			 */
+			continue;
+		}
+	....
+}
+```
+
+
+
+```
+static int collect_children(struct pstree_item *item)
+{
+	...
+	for (i = 0; i < nr_children; i++) {
+		...
+		if (!opts.freeze_cgroup)
+			/* fails when meets a zombie */
+			__ignore_value(compel_interrupt_task(pid));
+
+		ret = compel_wait_task(pid, item->pid->real, parse_pid_status, NULL, &creds.s, NULL);
+		if (ret < 0) {
+			/*
+			 * Here is a race window between parse_children() and seize(),
+			 * so the task could die for these time.
+			 * Don't worry, will try again on the next attempt. The number
+			 * of attempts is restricted, so it will exit if something
+			 * really wrong.
+			 */
+			ret = 0;
+			xfree(c);
+			continue;
+		}
+
+		if (ret == TASK_ZOMBIE)
+			ret = TASK_DEAD;
+		else
+			processes_to_wait--;
+
+		if (ret == TASK_STOPPED)
+			c->pid->stop_signo = compel_parse_stop_signo(pid);
+		...
+		/* Here is a recursive call (Depth-first search) */
+		ret = collect_task(c);
+		if (ret < 0)
+			goto free;
+	}
+	...
+}
+```
+
+
+
+Now that the process’s tasks tree is all frozen, CRIU does the following:
+
+- Lock the network
+- Collect File Locks
+- Collect Namespaces
+
+We will dive into these parts in the next blog : )
