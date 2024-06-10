@@ -43,7 +43,7 @@ function video_embed() {
     var p = document.getElementsByTagName('p');
     for(var i = 0; i < p.length; i++) {
         //check if this is an external url (that starts with https:// or http://
-        if (p[i].innerHTML.indexOf("http://") == 0 ||
+        if (Fp[i].innerHTML.indexOf("http://") == 0 ||
             p[i].innerHTML.indexOf("https://") == 0) {
             var youtube_id = get_youtube_id(p[i].innerHTML);
             if(youtube_id) {
