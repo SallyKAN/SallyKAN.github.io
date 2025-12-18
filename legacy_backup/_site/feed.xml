@@ -1,0 +1,1194 @@
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2024-06-10T15:13:47+08:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Sally-Blog</title><subtitle>My blog website</subtitle><entry><title type="html">让社交媒体成为你的RAG应用输入</title><link href="http://localhost:4000/blog/2024/06/10/rag" rel="alternate" type="text/html" title="让社交媒体成为你的RAG应用输入" /><published>2024-06-10T00:00:00+08:00</published><updated>2024-06-10T00:00:00+08:00</updated><id>http://localhost:4000/blog/2024/06/10/rag</id><content type="html" xml:base="http://localhost:4000/blog/2024/06/10/rag">&lt;h1 id=&quot;why-i-did-this&quot;&gt;Why I did this?&lt;/h1&gt;
+
+&lt;p&gt;作为一个从十岁就开始拥有自己QQ帐号的高强度网络冲浪90后选手。从大概五年前就开始思考，收集整合我的所有social media发言内容可以做点什么，那时候开了一个空的Github 项目，但也没作成什么实际的内容 https://github.com/SallyKAN/social_media_backup&lt;/p&gt;
+
+&lt;p&gt;信息时代里，数据是新的石油这句话对个人用户来说好像并不示用，因为个人很难拿自己创造的数据做点有意思的事，而big tech却可以靠你的个人数据日进斗金，他们分析你的用户画像，推荐定义你应该会喜欢的事物，依靠你的数据获取你的注意力。那些我们想删去的，过时的，愚蠢的社交媒体发言反而成为了汝之蜜糖彼之砒霜。&lt;/p&gt;
+
+&lt;p&gt;五年前我能想到最直接的应用就是通过爬虫把所有个人的社交媒体内容爬取下来，然后搭一个类似搜索引擎的social media brain，但是数据是我本地私有的，如果我可以发现一些有趣的内容或者insight，可以选择公开。甚至到后来，我可以有一个庞大的只属于我自己回忆的语料库，当然前提是你曾经是一个真正喜欢在社交媒体上暴露自己，发表观点，生活感悟的人。对于那些出生比我更晚，更小就拥有社交媒体，更加有表达欲的年轻一代们来说，活在社交媒体上，似乎也已经快成为现实。&lt;/p&gt;
+
+&lt;p&gt;那么接下来可以拿我们愚蠢的发言做什么？&lt;/p&gt;
+
+&lt;p&gt;一直到2023年chatGPT的出现，顺带孕育而出RAG应用，我突然发现也许有一种更偷懒的实现，也就是将自己社交媒体的内容作为RAG应用的输入。&lt;/p&gt;
+
+&lt;h1 id=&quot;what-is-rag--llm&quot;&gt;What is RAG + LLM&lt;/h1&gt;
+
+&lt;p&gt;LLM, Large Language Model 本质上有点像对互联网的压缩，因为如果你能非常准确地预测下一个词，你可以用它来压缩数据集，所以它只是一个下一个词预测的神经网络，你给它一些词，它会给你下一个词。而实现这种预测的核心就在于每个LLM模型的参数，以开源的Llama 2模型为例，这个系列有多个模型，对应不同的参数规模，7 亿、13 亿、34 亿。模型的训练过程是为了获取这些参数，而模型的运行过程可以称为模型推理，有了开源LLM，我们可以直接在本地运行模型。&lt;/p&gt;
+
+&lt;p&gt;在这里我们不关心模型训练，因为那是成本极其昂贵的复杂过程。我们只关心如何运行一个已经训练好的模型，根据提示去获取我们想要的结果。但我们很快就会遇到一个问题，即模型训练数据是静态的，并引入了其所掌握知识的截止日期，我们只能获取模型训练之前的信息。&lt;/p&gt;
+
+&lt;p&gt;RAG就是为了给LLM模型外挂一个实时的知识库，它会重定向 LLM，从权威的、预先确定的知识来源中检索相关信息。&lt;/p&gt;
+
+&lt;p&gt;一个RAG 与 LLM 配合使用的概念流程&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://raw.githubusercontent.com/SallyKAN/images/main/blogimage-20240610001330886.png&quot; alt=&quot;image-20240610001330886&quot; /&gt;
+简单来说我们可以外挂我们自己的社交媒体内容，通过RAG（检索增强）的方式投喂给LLM模型，获取一些好玩的回答和响应。&lt;/p&gt;
+
+&lt;h1 id=&quot;how-to-do-it&quot;&gt;How to do it&lt;/h1&gt;
+
+&lt;p&gt;如何开始实现这一个idea呢？先从一个简单的提问chatGPT开始&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://raw.githubusercontent.com/SallyKAN/images/main/blogimage-20240406210253805.png&quot; alt=&quot;image-20240406210253805&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;那么基于这几步我们就可以开始进行技术调研&lt;/p&gt;
+
+&lt;h2 id=&quot;收集数据&quot;&gt;收集数据&lt;/h2&gt;
+
+&lt;p&gt;以微博数据为例，我们首先需要一个爬虫工具。Github上有很多这样的开源工具，比如这个https://github.com/dataabc/weiboSpider ，有几点需要注意:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;
+    &lt;p&gt;因为是爬取自己的微博内容，所以应该参考这个&lt;a href=&quot;https://github.com/dataabc/weiboSpider/issues/113&quot;&gt;issue&lt;/a&gt;,&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;我们只需要微博内容，其他的信息不需要，所以最好修改爬取存取的内容&lt;/p&gt;
+
+    &lt;p&gt;&lt;img src=&quot;https://raw.githubusercontent.com/SallyKAN/images/main/blogimage-20240610002756893.png&quot; alt=&quot;image-20240610002756893&quot; /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://raw.githubusercontent.com/SallyKAN/images/main/blogimage-20240610002808840.png&quot; alt=&quot;image-20240610002808840&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;运行成功后，我们保存爬取的微博内容为.txt文件，作为后续的RAG知识库。&lt;/p&gt;
+
+&lt;h2 id=&quot;llm应用开发的框架&quot;&gt;LLM应用开发的框架&lt;/h2&gt;
+
+&lt;p&gt;直接选择&lt;a href=&quot;https://github.com/langchain-ai/langchain&quot;&gt;langchian&lt;/a&gt;, 可以使用很多开箱即用的调用大模型的能力。参考官方示例：https://python.langchain.com/v0.2/docs/tutorials/rag/&lt;/p&gt;
+
+&lt;p&gt;但问题在于langchain的官方demo使用的都是英文大模型，我们爬取的微博内容都是中文，这时候我们应该需要一个更适配中文大模型的开发框架，也就是我们需要&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;一个微调的中文大模型&lt;/li&gt;
+  &lt;li&gt;支持RAG的解决方案&lt;/li&gt;
+  &lt;li&gt;可以开箱即用的chatbot UI和界面访问能力&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;调研下来也就是&lt;a href=&quot;https://github.com/chatchat-space/Langchain-Chatchat&quot;&gt;Langchain-Chatchat&lt;/a&gt; 解决的痛点:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://raw.githubusercontent.com/SallyKAN/images/main/blogimage-20240610003705942.png&quot; alt=&quot;image-20240610003705942&quot; /&gt;&lt;/p&gt;
+&lt;h2 id=&quot;中文大模型&quot;&gt;中文大模型&lt;/h2&gt;
+
+&lt;p&gt;实测了一把chatGLM和LLAMA-2-Chinese，最终还是选择了&lt;strong&gt;ChatGLM&lt;/strong&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;本地运行的硬件要求&quot;&gt;本地运行的硬件要求&lt;/h2&gt;
+
+&lt;p&gt;虽然前文提到，运行模型已经是相对成本低廉的，我们可以从HuggingFace上下载&lt;a href=&quot;https://huggingface.co/THUDM/chatglm3-6b&quot;&gt;ChatGLB模型&lt;/a&gt; , 但很快我发现即便是号称性能与资源已经最好平衡的Llama 3, 也仍然需要至少8GB显存的Nvidia GPU,才能满足模型推理性能。&lt;/p&gt;
+
+&lt;p&gt;我的个人开发笔记本别说有Nvidia GPU, 甚至连独立显卡都没有，都是集成显卡。&lt;/p&gt;
+
+&lt;p&gt;显然我们需要更加一个云端部署的，&lt;strong&gt;便宜的&lt;/strong&gt;的解决方案，一番调研后我选择了AutoDL&lt;/p&gt;
+
+&lt;p&gt;关于Langchain-Chatchat的开发部署可以直接参考https://github.com/chatchat-space/Langchain-Chatchat/blob/master/README.md#%E5%BC%80%E5%8F%91%E9%83%A8%E7%BD%B2&lt;/p&gt;
+
+&lt;p&gt;登录AutoDL申请实例的时候可以直接选择Langchain-Chatchat的镜像
+&lt;img src=&quot;https://raw.githubusercontent.com/SallyKAN/images/main/blogimage-20240610144854425.png&quot; alt=&quot;image-20240610144854425&quot; /&gt;
+然后找到已经有的python 虚拟环境&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;conda-env list
+conda activate /root/pyenv/
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;直接进入Langchain-Chatchat的目录执行，就会看到实例server端以6006启动&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;python startup.py -a
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;AutoDL的实例默认只开启了6006端口，所以需要作SSH反向映射，详情参见https://www.autodl.com/docs/ssh/&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://raw.githubusercontent.com/SallyKAN/images/main/blogimage-20240609122425294.png&quot; alt=&quot;image-20240609122425294&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;只需要在本地机器上执行，&lt;code class=&quot;highlighter-rouge&quot;&gt;54299&lt;/code&gt;和&lt;code class=&quot;highlighter-rouge&quot;&gt;connect.bjb1.seetacloud.com&lt;/code&gt; 需要从控制面板的ssh登录指令获取&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ssh -v -o PubkeyAuthentication=no -CNg -L 6006:127.0.0.1:6006 root@connect.bjb1.seetacloud.com -p 54299
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;运行后，在本机打开http://127.0.0.1:6006 即可访问langchain chatchat界面：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://raw.githubusercontent.com/SallyKAN/images/main/blogimage-20240427204318899.png&quot; alt=&quot;image-20240427204318899&quot; /&gt;&lt;/p&gt;
+
+&lt;h1 id=&quot;have-some-fun&quot;&gt;Have Some Fun&lt;/h1&gt;
+
+&lt;p&gt;接下来我们用爬取的微博内容创建一个知识库：&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;上传爬取爬取下来的.txt文件，创建知识库名字&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://raw.githubusercontent.com/SallyKAN/images/main/blogimage-20240427204354442.png&quot; alt=&quot;image-20240427204354442&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://raw.githubusercontent.com/SallyKAN/images/main/blogimage-20240610145649629.png&quot; alt=&quot;image-20240610145649629&quot; /&gt;&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;选择知识库问答&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://raw.githubusercontent.com/SallyKAN/images/main/blogimage-20240610145730289.png&quot; alt=&quot;image-20240610145730289&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;接下来就可以愉快的和曾经你发布的内容聊天了，几个我觉得很好玩的例子，包含了一些大模型一本正经的胡说八道和偶然闪现的真知灼见，以下内容都是大模型根据我跨度超过十年的四千多条微博记录回答生成：&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;从微博中看，人生不快乐的原因有哪些？&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://raw.githubusercontent.com/SallyKAN/images/main/blogimage-20240609151423710.png&quot; alt=&quot;image-20240609151423710&quot; /&gt;&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;
+    &lt;p&gt;迄今为止发生过的最好的事&lt;/p&gt;
+
+    &lt;p&gt;&lt;img src=&quot;https://raw.githubusercontent.com/SallyKAN/images/main/blogimage-20240609151442484.png&quot; alt=&quot;image-20240609151442484&quot; /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;对亲人有哪些爱的表达？&lt;/p&gt;
+
+    &lt;p&gt;&lt;img src=&quot;https://raw.githubusercontent.com/SallyKAN/images/main/blogimage-20240609151546577.png&quot; alt=&quot;image-20240609151546577&quot; /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;对社交媒体的看法&lt;/p&gt;
+
+    &lt;p&gt;&lt;img src=&quot;https://raw.githubusercontent.com/SallyKAN/images/main/blogimage-20240609151915882.png&quot; alt=&quot;image-20240609151915882&quot; /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;对微信的看法&lt;/p&gt;
+
+    &lt;p&gt;&lt;img src=&quot;https://raw.githubusercontent.com/SallyKAN/images/main/blogimage-20240609151949495.png&quot; alt=&quot;image-20240609151949495&quot; /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;有哪些有趣的idea&lt;/p&gt;
+
+    &lt;p&gt;&lt;img src=&quot;https://raw.githubusercontent.com/SallyKAN/images/main/blogimage-20240609152042172.png&quot; alt=&quot;image-20240609152042172&quot; /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;如果让你总结她的性格，会是什么？&lt;/p&gt;
+
+    &lt;p&gt;&lt;img src=&quot;https://raw.githubusercontent.com/SallyKAN/images/main/blogimage-20240609153933875.png&quot; alt=&quot;image-20240609153933875&quot; /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;8 . 如果让你从以下几个方面生成一份性格调研报告，包含潜在感兴趣的内容，并给出观点评论&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;工作&lt;/li&gt;
+  &lt;li&gt;健身&lt;/li&gt;
+  &lt;li&gt;个人项目&lt;/li&gt;
+  &lt;li&gt;学习总结&lt;/li&gt;
+  &lt;li&gt;兴趣发展&lt;/li&gt;
+  &lt;li&gt;人际关系&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://raw.githubusercontent.com/SallyKAN/images/main/blogimage-20240609163255456.png&quot; alt=&quot;image-20240609163255456&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://raw.githubusercontent.com/SallyKAN/images/main/blogimage-20240610151331424.png&quot; alt=&quot;image-20240610151331424&quot; /&gt;&lt;/p&gt;
+&lt;h1 id=&quot;one-more-thing&quot;&gt;One More Thing&lt;/h1&gt;
+
+&lt;p&gt;人们是否希望LLM基于他们自己的社交媒体发言去总结人生，和给出观点评论呢？就像大家爱做的性格测试分享，网易云音乐年度报告一样。&lt;/p&gt;
+
+&lt;p&gt;也许有时候我们自己都忘记了自己曾经的观点，声音和兴趣？&lt;/p&gt;</content><author><name></name></author><category term="AI" /><category term="RAG" /><category term="LLM" /><category term="ChatGLM" /><summary type="html">Why I did this?</summary></entry><entry xml:lang="zh"><title type="html">Mockingbird克隆声音初体验</title><link href="http://localhost:4000/blog/2024/03/10/mockingbird" rel="alternate" type="text/html" title="Mockingbird克隆声音初体验" /><published>2024-03-10T00:00:00+08:00</published><updated>2024-03-10T00:00:00+08:00</updated><id>http://localhost:4000/blog/2024/03/10/mockingbird</id><content type="html" xml:base="http://localhost:4000/blog/2024/03/10/mockingbird">&lt;p&gt;最近一直在琢磨AI数字复活的事，比如以后亲人过世，是不是可以通过AI还原他们的声音和影像？就像今年商汤年会通过数字人的方式还原已故的汤晓鸥教授那样。B站也有很多用AI复活自己去世亲人的视频，甚至这已经变成了一个产业。&lt;/p&gt;
+
+&lt;p&gt;畅想一下，用AIGC比如chatGPT，根据特定的promote去扮演语言人格，早之前的deep fake, midjourney 或者现在最新的sora去生成某个人相关的视频，再用AI声音克隆去还原特定人的声音。&lt;/p&gt;
+
+&lt;p&gt;于是想玩一下声音克隆的东西，找到这个支持中文普通话的声音克隆项目，折腾了一晚上初体验了一下&lt;/p&gt;
+
+&lt;p&gt;项目地址：https://github.com/babysor/MockingBird&lt;/p&gt;
+
+&lt;h1 id=&quot;安装&quot;&gt;安装&lt;/h1&gt;
+
+&lt;p&gt;我的电脑是ubuntu系统，所以参考官方&lt;a href=&quot;https://github.com/babysor/MockingBird/blob/main/README-LINUX-CN.md&quot;&gt;wiki&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;环境安装如下&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;conda create -n sound python=3.9
+conda activate sound
+git clone https://github.com/babysor/MockingBird.git
+cd MockingBird
+pip install -r requirements.txt
+pip install webrtcvad-wheels
+pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu117
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;由于科学上网，我本地的终端都走了代理，执行到&lt;code class=&quot;highlighter-rouge&quot;&gt;pip install -r requirements.txt&lt;/code&gt; 时发现&lt;code class=&quot;highlighter-rouge&quot;&gt;monotonic-align&lt;/code&gt; 找不到，开始以为是镜像源的问题，后来解决方法如下：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;找到requirements.txt文件并打开。
+在文件中查找并定位到包含&quot;monotonic-align==0.0.3&quot;的行。
+删除&quot;==0.0.3&quot;部分，仅保留文本&quot;monotonic-align&quot;。
+保存当前文档并关闭。
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h1 id=&quot;开始使用&quot;&gt;开始使用&lt;/h1&gt;
+
+&lt;h2 id=&quot;准备音频&quot;&gt;准备音频&lt;/h2&gt;
+
+&lt;p&gt;MockingBIrd默认只支持wav格式的语音，我使用的是苹果手机语音备忘录默认是m4a，随便在网上找个m4a to wav的&lt;a href=&quot;https://convertio.co/zh/m4a-wav/&quot;&gt;转换网站&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://raw.githubusercontent.com/SallyKAN/images/main/blogimage-20240310133917055.png&quot; alt=&quot;image-20240310133917055&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;下载模型&quot;&gt;下载模型&lt;/h2&gt;
+
+&lt;p&gt;官网提供的模型可以直接用main分支的第一个模型百度云链接已经失效，而剩下三个都需要切换到v0.0.1分支使用&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://raw.githubusercontent.com/SallyKAN/images/main/blogimage-20240310134056479.png&quot; alt=&quot;image-20240310134056479&quot; /&gt;&lt;/p&gt;
+
+&lt;h1 id=&quot;运行踩坑&quot;&gt;运行踩坑&lt;/h1&gt;
+
+&lt;p&gt;如果有了synthesizer的pt模型，可以直接执行&lt;code class=&quot;highlighter-rouge&quot;&gt;python web.py &lt;/code&gt; 或者&lt;code class=&quot;highlighter-rouge&quot;&gt;python demo_toolbox.py&lt;/code&gt; 测试克隆声音而不需要重头训练&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://raw.githubusercontent.com/SallyKAN/images/main/blogc30fdec60b7c4507a7b4c5f29731a9d9%7Etplv-k3u1fbpfcp-zoom-in-crop-mark%3A1512%3A0%3A0%3A0.awebp&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;跑起来过程中可能有一些python库版本不兼容的错，一般是有什么错google什么，遇到一个解决一个，这里不再赘述。记录一下几个印象深刻的坑&lt;/p&gt;
+
+&lt;h2 id=&quot;关于代码分支&quot;&gt;关于代码分支&lt;/h2&gt;
+
+&lt;p&gt;值得一提的是如果你使用的v0.0.1的代码的话，会发现按照作者wiki里的文件结构没加载到synthesizer的pt模型&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://raw.githubusercontent.com/SallyKAN/images/main/blogimage-20240310134353508.png&quot; alt=&quot;image-20240310134353508&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://raw.githubusercontent.com/SallyKAN/images/main/blogimage-20240310173905050.png&quot; alt=&quot;image-20240310173905050&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;查看源码会发现，因为v0.0.1的代码默认是从&lt;code class=&quot;highlighter-rouge&quot;&gt;synthesizer/saved_models/*.pt&lt;/code&gt; 下加载synthesizer模型的，而不是&lt;code class=&quot;highlighter-rouge&quot;&gt;data/ckpt/synthesizer/*.pt&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://raw.githubusercontent.com/SallyKAN/images/main/blogimage-20240310174000936.png&quot; alt=&quot;image-20240310174000936&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;也就是说运行后三个官方wiki中提供的模型的话，你需要把pt文件都放到&lt;code class=&quot;highlighter-rouge&quot;&gt;synthesizer/saved_models/&lt;/code&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;synthesizer的pt模型&quot;&gt;synthesizer的pt模型&lt;/h2&gt;
+
+&lt;p&gt;试了试官方wiki中基于v0.0.1的几个模型，效果都非常的惊悚&lt;/p&gt;
+
+&lt;p&gt;这是原音&lt;/p&gt;
+
+&lt;p&gt;/audio/miao2.wav&lt;/p&gt;
+
+&lt;p&gt;这是鬼叫。。。&lt;/p&gt;
+
+&lt;p&gt;/audio/temp_result.wav&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://raw.githubusercontent.com/SallyKAN/images/main/blogimage-20240310191509364.png&quot; alt=&quot;image-20240310191509364&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;最后从网上搜罗到的模型测试，发现效果最好的还是&lt;code class=&quot;highlighter-rouge&quot;&gt;synthesizer-merged_110k.pt&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://raw.githubusercontent.com/SallyKAN/images/main/blogimage-20240310192629317.png&quot; alt=&quot;image-20240310192629317&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;/audio/miao-test-1.wav&lt;/p&gt;
+
+&lt;p&gt;最后分享收集到的模型共大家把玩&lt;/p&gt;
+
+&lt;p&gt;https://drive.google.com/file/d/1uaki-yu-W-zMxTbJEWyynx-o8ksz5ZZU/view?usp=sharing&lt;/p&gt;</content><author><name></name></author><category term="AI" /><category term="MockingBird" /><summary type="html">最近一直在琢磨AI数字复活的事，比如以后亲人过世，是不是可以通过AI还原他们的声音和影像？就像今年商汤年会通过数字人的方式还原已故的汤晓鸥教授那样。B站也有很多用AI复活自己去世亲人的视频，甚至这已经变成了一个产业。</summary></entry><entry xml:lang="zh"><title type="html">2022年的书籍，电影和其他</title><link href="http://localhost:4000/blog/2023/01/02/2022" rel="alternate" type="text/html" title="2022年的书籍，电影和其他" /><published>2023-01-02T00:00:00+08:00</published><updated>2023-01-02T00:00:00+08:00</updated><id>http://localhost:4000/blog/2023/01/02/2022</id><content type="html" xml:base="http://localhost:4000/blog/2023/01/02/2022">&lt;p&gt;2022年终于过去了，希望我们每个人都在2022年的最后一天23: 59分的时候，和烟花爆竹声一起大声说一句：&lt;/p&gt;
+
+&lt;p&gt;“新冠，操你妈”&lt;/p&gt;
+
+&lt;p&gt;震慑恶魔，赶走晦气，喜迎新年。毕竟这可能是我们唯一能骂的了（不是）&lt;/p&gt;
+
+&lt;p&gt;过去的一年里，换了一个城市，从北京搬到深圳。终于靠近了海边，去过海钓，爱上了粤菜，跑去学了拳击，街舞，滑板Ollie也还是只学到一半，因为成年人缺少摔跤的勇气。可能是一直在追寻线下生活中的新鲜感，2022年竟然是我历年书和电影看的最少的一年。&lt;/p&gt;
+
+&lt;p&gt;虽然我还是那个去每个地方都想逛当地书店的nerd，但读书这件事，好像还是漫漫淡出了我生活的重心，很多读书的快乐和心境，就像返老还童的梦想一样不可得。
+不过年龄增长，对书和电影的品味依然在变化，求知与无知，理想和偏见，相辅相成又唇亡齿寒。
+依然痛并快乐的是，书籍给了我以偏见看世界的底气，毕竟&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;The bias is a failure to capture the reality.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;所以不如回头看看，2022年的精神世界里又增长了哪几种偏见。&lt;/p&gt;
+
+&lt;h1 id=&quot;书&quot;&gt;书&lt;/h1&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://book.douban.com/subject/26362836/&quot;&gt;献给阿尔吉侬的花束&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;这本书放在第一位，实在是因为，这是2022年唯一一本把我看哭的小说，起因是因为看了《万神殿》，发现里面提到了这本书，被上传的智能会智能decay，最终失去一切意识，就像&lt;a href=&quot;https://book.douban.com/subject/26362836/&quot;&gt;献给阿尔吉侬的花束&lt;/a&gt; 这本书里面的小白鼠和查理一样。于是我跑去看了这本书，发现这本书后劲真的很大，看完之后的半个月里，偶尔还出神想到近步报告。&lt;/p&gt;
+
+&lt;p&gt;后来有一天顿悟，会不会我们所有人都和查理一样，智力和感受力都曾在过去到达巅峰，我们愚蠢过，爱过，恨过，骄傲过，觉得自己与众不凡过，而最终，这一切还是逃不过遗忘。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://book.douban.com/subject/26901177/&quot;&gt;流动的盛宴&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;终于看完了这部，私心还是top2。看到最后一篇的时候，我长久以来的对海明威的困惑终于有了那么一点公正的回音。我还是很讨厌他的作品里那种自以为是的macho气息，无论是《乞力马扎罗的雪》里面他跟女主的争吵，还是《永别了武器》里他对女主最后爱而不得的鄙弃。但他又是复杂的，就像我还是会为他的短篇感动，比如《等了一整天》看了不知道多少遍还是初心，《一个干净明亮的地方》，《白象似的群山》里面干净后劲巨大的技巧至今璀璨夺目。&lt;/p&gt;
+
+&lt;p&gt;巴黎永远没有个完，巴黎永远得有个头。&lt;/p&gt;
+
+&lt;p&gt;生活总得有下个盛宴，下一瓶你最爱的白葡萄酒，下一杯苏打水威士忌，樱桃白兰地，马朗牡蛎。 下一次冒险，受伤，下一次心碎，恐惧，下一次自我崩溃。
+我一直在等着有一天能再在海明威的作品里找到《等了一整天》里那个小男孩的身影。但应该不是在巴黎。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://book.douban.com/subject/30417612/&quot;&gt;非对称风险 : 风险共担，应对现实世界中的不确定性&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;更喜欢英文名 Skin in the game，觉得这个名字实在是恰如其分。放在2022年读，更是有种鞭辟入里的感受。因为疫情期间的政府公信力，互联网上每个人要么自说自话要么吵得天翻地覆。而塔勒布阐述了在我看来很多事背后的原因：很多参与决策和拥有权力的人并没有承担相应的风险。&lt;/p&gt;
+
+&lt;p&gt;书中不断提到的遍历性也很有意思，从来没想过从这个意义上去看问题。这也从概率意义上解释了人们为什么越来越讨厌成功学，社会层面的概率对于个人的成功甚至生存，没有太多指导意义，因为它是非遍历的。一个人可以指导历史，分析历史，预测历史，但最终，ta这一生能做到的不过是承受历史。 空间概率上来说，人口会不断增加，财富会不断积累发展。但对于个体来说，只有时间概率才有意义，生存是唯一的理性。&lt;/p&gt;
+
+&lt;p&gt;塔勒布也基本上成为我2022年最喜欢的作者，因为他说：&lt;/p&gt;
+
+&lt;p&gt;“我对成功的定义就是过上一种挺直脊梁充满荣誉感的有尊严的生活，绝对不能让别人替我们去承担由我们的错误所造成的后果。”&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://book.douban.com/subject/35593780/&quot;&gt;工作、消费主义和新穷人&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;这本书在2022年应该也很火，看作者对现代化这个词的一些用法就觉得他是不是看过米兰昆德拉，结果后来真的开始引用《告别圆舞曲》里面的话。 这里面对新穷人的一些定义和描述，我觉得甚至比《贫穷的本质》那本书都更深刻和犀利。期待作者把数字游民的方式作为一种解决方案展开讲讲……结果只是简单描述了一下。 不过，书里面的资本社会的消费美学，工作伦理，自由选择的虚幻感，垃圾而无用的底层人口概念，看完还是那个感受，全球化潮水褪去的当下，我们是不是又已经站在历史的十字路口了呢。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.amazon.cn/dp/B00IDU149A&quot;&gt;反脆弱:从不确定性中获益&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;虽然我觉得我2022年最喜欢的作者是塔勒布，但这本书还是有点啰嗦，本来前三章挺好的。在里面看到了当初在KK 《失控》里看到的理论，有很多复杂性理论的影子。混乱，坚韧，获益，创新，whatever can not kill you, will kill other people。&lt;/p&gt;
+
+&lt;p&gt;拒绝预测未来是因为某种程度上我们都是那只火鸡，我们从过去推断，但过去已经发生的事情可能和我们想证明的未来没有任何因果关系。话说回来，2022年黑天鹅的事情依然井喷，不是吗。（或者也许塔勒布又要跳起脚来指责我们认错了黑天鹅：IT‘S NOT A BLACK SWAN&lt;/p&gt;
+
+&lt;p&gt;对抗不确定性的方式之一，就是成为不确定性本身。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://book.douban.com/subject/35594496/&quot;&gt;福格行为模型&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;这本书基本改变了我2022年的整个思维习惯。这个行为设计的公式B=MAP，一直是我2022设计各种习惯的meta principle,&lt;/p&gt;
+
+&lt;p&gt;Behavior = Motivation + Ability + Prompt&lt;/p&gt;
+
+&lt;p&gt;很多我们坚持不下去的习惯，我们想付诸行动也却一直没下文的时候，总能从这三个元素中找到原因对症下药，要么是动力不足，或者目标设定不合理，我们没有足够的能力，要么是我们没有设置足够多的提示，让我们打一场持久战。更重要的是，这个公式可以将“不够自律”这个万能失败原因去掉，停止内耗，找到真正的原因去一点点试错，让自己慢慢变得更好。&lt;/p&gt;
+
+&lt;p&gt;说起来，就是科学认知才能带来稳定的改变的心态。我们越使用这个公式，就会越了解自己，了解自己在意什么，有跳起来的能力做什么，会被什么吸引注意。就像我记得我朋友对我说的话：用最适合自己的方式战斗才能改变世界。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://gettingthingsdone.com/&quot;&gt;Getting Things Done&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;没想到时隔3年，我又重看了GTD，并且还是决定把这本书列为我的年度书籍之一。重读过程中又让我开始思考第二大脑的可能性，同时也（无用地）折腾了一些效率工具，大浪淘沙后我放弃了Notion, Obsidian, 各种火爆的双链笔记本浪潮（我愿意把2022年称为双链笔记本元年），最后我留下的是flomo，作为移动段的inbox输入，界面就象是自己一个人用的微博。&lt;/p&gt;
+
+&lt;p&gt;关于GTD的很多思考我都放在&lt;a href=&quot;https://sallykang.com/blog/2022/07/22/gtd&quot;&gt;这篇文章里了&lt;/a&gt;， 我到现在我也不敢说我有一个完全符合GTD 思想的system了，我还在努力信任我的GTD系统，降低第一大脑的思考负担。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://book.douban.com/subject/7007204/&quot;&gt;编程大师访谈录&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;重新找回一点作为程序员的初心，羡慕他们所在的年代，智慧，胆识和毅力，我的工作电脑屏幕依然是这句话: “Programming is not a science, it’s a craft. “
+软件工程复杂又迷人，但将自己的心血倾注到一个软件作品的感受可太棒了，虽然让我心碎的是听到了乔布斯的坏话，原来当初的海盗团队不是真的。&lt;/p&gt;
+
+&lt;p&gt;我真是崇拜着产品经理，转头就去当了码农。Anyway, the journey is the reward.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://book.douban.com/subject/35768003/&quot;&gt;寻找米兰·昆德拉&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;这是一本很薄的书，之所以列进来，可能还是因为，这是米兰昆德拉啊。&lt;/p&gt;
+
+&lt;p&gt;作者和米兰一样捍卫隐私的后果，可能就意味着我用不到一个小时的时间就看完了米兰的一生轨迹。 “一个需要被倾听的作者却无法再用母语发表作品。” 至少感谢米兰，让我十八岁的时候在《小说的艺术》里看到了属于你的文学万神殿堂。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://book.douban.com/subject/10594802/&quot;&gt;写给无神论者 : 宗教对世俗生活的意义&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;这应该是2022年在西安隔离看完的第一本书，一直想找机会抒发下对阿兰德波顿的爱。从哲学的慰藉，幸福的建筑再到这本写给无神论者。谢谢他在每本书里的悲观，诚实和悲悯。&lt;/p&gt;
+
+&lt;p&gt;我喜欢德波顿在书里用宗教对孤独，婚礼仪式，甚至求知的解释，当然我觉得最精彩的还是对于德波顿提出的宗教之于当代教育的意义，那就是对抗遗忘。
+宗教的魅力之一，就在于它坚信人类的遗忘本性和自制缺失，对于一个真理，知行合一需要不断的印象强化并执行。所以佛教有业障修行，每日打坐冥想，基督教有每周弥撒和忏悔。而无神论者的教育世界里，人们却相信，有些道理只在二十岁的时候听过一两次，哪怕是以老师站在讲台上用毫无起伏的音调讲出的形式，他们都会在余生遵守这些道理。我们重视真理的正确与否，却遗忘了真理的贯彻一致。&lt;/p&gt;
+
+&lt;p&gt;也许这也是我们作为无神论者，更容易感到迷茫的原因之一吧。而生活的真理不是上帝的箴言，而是吉光片羽的碎片。&lt;/p&gt;
+
+&lt;p&gt;不过依然，哪怕德波顿说博物馆应该是我们的教堂。我还是想加上一句。
+在一个没有信仰的国度，书店也是我们最后的教堂。&lt;/p&gt;
+
+&lt;h1 id=&quot;电影&quot;&gt;电影&lt;/h1&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://movie.douban.com/subject/35876302/&quot;&gt;晒后假日&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;2022年度最佳，看完后哭了很久，不知道为啥。
+在观看过程中，被无数飞逝而过的抓不住的回忆片段击中，就像是你在某天回到家乡的家里，随手拿起一本很多年前看过的蒙尘已久的书，指尖漫无目的地翻页，带过的字句留在视网膜上的残影。
+这部电影最伟大之处就是，它明明在讲一件很私人，微不足道的事。
+却能在短短两个小时内，让无数的观众的心里都被一碗温水淋了一遍&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://movie.douban.com/subject/34951007/&quot;&gt;风骚律师 第六季&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;What can I say, it’s saul.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://movie.douban.com/subject/35282951/&quot;&gt;你将不再孤单&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;这部电影刚好在母亲节看的，算是母亲节最佳的一首电影诗。被男性导演能如此细腻表达出某种脆弱感感动到。
+女主从一无所知的女孩变成一无所知的女巫，变成女人，承受男人的暴力和对世界的不解 。那种脆弱感就像女巫每次变换成不同人类时，眼睛里流露出的迷茫和怜悯，关于这个身份，这个我到底是天生的，还是被塑造的，被驯服的？&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://movie.douban.com/subject/26717030/&quot;&gt;亿万 第二季&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;看完那刻我就知道这季会成为我的年度最佳之一，肮脏的正义，纯粹的欲望，以及越来越混乱又运行良好的世界秩序。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://movie.douban.com/subject/30279170/&quot;&gt;倒数时刻&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://movie.douban.com/subject/35073886/&quot;&gt;分手的决心&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;在《分手的决心》里找到了那点所剩不多的共鸣。
+“摧毁一个人最佳方式就是你成为ta的一部分，然后消失在这个世界上。” 植入那个不可能实现的想法，就像很多年前诺兰在我脑中转起那个陀螺一样。 随风潜入梦，细节这种东西就像回忆的寄生虫。因为它们拥有了余生所有感性的共生能力。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://movie.douban.com/subject/30314848/&quot;&gt;瞬息全宇宙&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;试图和我妈描述剧情：一个母亲，一个女人，穿越所有宇宙试图拯救女儿于虚无与抑郁的故事，哪怕这样的虚无感某一部分正是来自于她作为母亲的恐惧和爱。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://movie.douban.com/subject/34990593/&quot;&gt;万神殿&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;第一集就讨论哲学家就餐问题，简直就是我们nerd的盛宴。黑客帝国，攻壳机动队，很多熟悉的味道。但就是，看得很爽。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://movie.douban.com/subject/35524211/&quot;&gt;绝望写手&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;又是一个绝好的关于“没有你，我是谁”的女性故事。黑色幽默的Standup 实在太治愈（&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://movie.douban.com/subject/35351365/&quot;&gt;夏日重现&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;“当战略陷入绝境，何不笑而面对。”&lt;/p&gt;
+
+&lt;h1 id=&quot;其他&quot;&gt;其他&lt;/h1&gt;
+
+&lt;p&gt;说起来2022年也尝试了很多户外活动。&lt;/p&gt;
+
+&lt;p&gt;第一次去海钓。终于和很多人一起滑板，去跳Urban舞蹈，弹会了三首尤克里里曲子。和一起练拳击的伙伴一起去海边骑行，重新找回了大学骑行的快乐。&lt;/p&gt;
+
+&lt;h1 id=&quot;没有展望的结尾&quot;&gt;没有展望的结尾&lt;/h1&gt;
+
+&lt;p&gt;其实就是展望 =.=
+希望新的一年，可以读更多虚构文学。我自己也可以写更多虚构作品，just for fun. 
+希望获得更多共鸣，connections，表达欲，因为这几样感觉在2022年都快消耗殆尽。&lt;/p&gt;
+
+&lt;p&gt;李安：“没有真心诚意的交流，生活是很空虚的。人生荒谬，很多深层交流不能明讲，只有靠艺术、靠电影，靠这些虚幻的东西、假设的东西，在里面交流，你才会感觉没有那么孤单，没有那么无助。”&lt;/p&gt;
+
+&lt;p&gt;以上。&lt;/p&gt;</content><author><name></name></author><category term="life" /><category term="reading" /><category term="review" /><category term="movies" /><summary type="html">2022年终于过去了，希望我们每个人都在2022年的最后一天23: 59分的时候，和烟花爆竹声一起大声说一句：</summary></entry><entry xml:lang="en"><title type="html">Dive into CRIU (1) - Setup And Dump A Process</title><link href="http://localhost:4000/blog/2022/09/12/dive-into-criu-1-setup-and-dump-a-process" rel="alternate" type="text/html" title="Dive into CRIU (1) -  Setup And Dump A Process" /><published>2022-09-12T00:00:00+08:00</published><updated>2022-09-12T00:00:00+08:00</updated><id>http://localhost:4000/blog/2022/09/12/dive-into-criu-1-setup-and-dump-a-process</id><content type="html" xml:base="http://localhost:4000/blog/2022/09/12/dive-into-criu-1-setup-and-dump-a-process">&lt;h1 id=&quot;first-what-is-criu&quot;&gt;First, What is CRIU?&lt;/h1&gt;
+
+&lt;p&gt;If you are wondering how to do time and space travel inside a Linux containers, then I guess this blog is something you might be interested in.
+Checkpoint-Restore in Userspace (or &lt;a href=&quot;https://github.com/checkpoint-restore&quot;&gt;CRIU&lt;/a&gt;) is a super cool open-source project started by virtualization software company — Virtuozoo — also known for being the creator of OpenVZ.&lt;/p&gt;
+
+&lt;p&gt;Considering you are using a Cloud Native Architechture to develop your application, say that is running inside a container, then CRIU is something can freeze a process inside a container and live migrate it to another container (with some constraints, for example the new container must have the same running environment)&lt;/p&gt;
+
+&lt;h1 id=&quot;quick-demo&quot;&gt;Quick Demo&lt;/h1&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=QIs-3Rtbpps&amp;amp;list=PL86FC0XuGZPISge_th8F5Jjj-IbGXEfE6&amp;amp;index=2&quot;&gt;how CRIU can dump and restore a TCP connections v2&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;To find the secret behind CRIU, let’s dive deeper into CRIU’s source code now :)&lt;/p&gt;
+
+&lt;h1 id=&quot;set-up&quot;&gt;Set up&lt;/h1&gt;
+
+&lt;p&gt;First let’s get the source code from &lt;a href=&quot;https://github.com/checkpoint-restore/criu&quot;&gt;github&lt;/a&gt;. As it mentioned on the official documents &lt;a href=&quot;https://criu.org/Installation&quot;&gt;here&lt;/a&gt;
+here’s a docker-build target in Makefile which builds CRIU in Ubuntu Docker container. Just run make &lt;code class=&quot;highlighter-rouge&quot;&gt;docker-build&lt;/code&gt; , since we don’t want to start a new docker process every single time we play with CRIU,  so add one more line at the end of the Dockerfile which located at &lt;code class=&quot;highlighter-rouge&quot;&gt;scripts/build&lt;/code&gt; :&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;ENTRYPOINT [&quot;tail&quot;, &quot;-f&quot;, &quot;/dev/null&quot;]&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;This would make CRIU container keep running.&lt;/p&gt;
+
+&lt;p&gt;Then we start the CRIU container :
+&lt;code class=&quot;highlighter-rouge&quot;&gt;docker run --privileged --cap-add=all -d -t criu-x86_64&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;NOTE&lt;/strong&gt;: criu needs the root privilege to run inside the container.&lt;/p&gt;
+
+&lt;h1 id=&quot;warm-up-1--how-does-linux-identify-processes&quot;&gt;Warm Up 1:  How Does Linux Identify Processes&lt;/h1&gt;
+
+&lt;p&gt;Now we all probably know that applications deployed in Linux system, no matter what programming languages they are written,  they would end up running in Linux system as processes. This concerns us because that’s where all the CRIU stuff could work like a charm.&lt;/p&gt;
+
+&lt;p&gt;We can skip the part of creation of a processes in Linux, but how does Linux identify processes?&lt;/p&gt;
+
+&lt;p&gt;Well ,  a program is identified by its process ID (PID) as well as it’s parent processes ID (PPID), therefore processes can further be categorized into:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Parent processes – these are processes that create other processes during run-time.&lt;/li&gt;
+  &lt;li&gt;Child processes – these processes are created by other processes during run-time.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;In fact, all information about running process in Linux can be found under the directory &lt;code class=&quot;highlighter-rouge&quot;&gt;/proc&lt;/code&gt;. You can think &lt;code class=&quot;highlighter-rouge&quot;&gt;/proc&lt;/code&gt; as a virtual filesystem. It’s also referred to as a process information pseudo-file system. It doesn’t contain ‘real’ files but runtimesystem information (e.g. system memory, devices mounted, hardware configuration, etc).&lt;/p&gt;
+
+&lt;p&gt;In &lt;code class=&quot;highlighter-rouge&quot;&gt;/proc&lt;/code&gt;, there are things CRIU need to actually checkpoint/restore a process, including:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;/proc/PID/fd
+	Directory, which contains all file descriptors.
+/proc/PID/mem
+	Memory held by this process.
+/proc/PID/maps
+	Memory maps to executables and library files.
+
+...etc.	
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h1 id=&quot;warm-up-2--the-ptrace-system-call-in-linux&quot;&gt;Warm Up 2:  The ptrace() system call in Linux&lt;/h1&gt;
+
+&lt;p&gt;By default, CRIU makes use of ptrace to collect process information and stop the process. 
+What you need to know about ptrace:&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;The ptrace() system call provides a means by which one process (the “tracer”) may observe and control the execution of another process (the “tracee”), and examine and change the tracee’s memory and registers. It is primarily used to implement breakpoint debugging and system call tracing.
+See https://man7.org/linux/man-pages/man2/ptrace.2.html.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h1 id=&quot;dumping-a-simle-program&quot;&gt;Dumping A Simle Program&lt;/h1&gt;
+
+&lt;p&gt;Let’s start from a simple demo from the official website first:&lt;/p&gt;
+
+&lt;p&gt;create a &lt;code class=&quot;highlighter-rouge&quot;&gt;test.sh&lt;/code&gt;:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ cat &amp;gt; test.sh &amp;lt;&amp;lt;-EOF
+#!/bin/sh
+while :; do
+    sleep 1
+    date
+done
+EOF
+$ chmod +x test.sh
+$ setsid ./test.sh  &amp;lt; /dev/null &amp;amp;&amp;gt; test.log &amp;amp;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Make a new folder named &lt;code class=&quot;highlighter-rouge&quot;&gt;test_criu&lt;/code&gt; under the code base directory &lt;code class=&quot;highlighter-rouge&quot;&gt;./criu&lt;/code&gt;, copy it into the container when building the CRIU image so we don’t need to create the same script every time we restart the container.&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;COPY test_criu /criu&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;After running &lt;code class=&quot;highlighter-rouge&quot;&gt;docker exec -it $CONTAINER_ID bash&lt;/code&gt;, now we are in the container.&lt;/p&gt;
+
+&lt;p&gt;By doing following, You get the pid of the running process&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ps -C test.sh
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Using this simple command, you can dump the process:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;criu dump -t $pid -vvv -o dump.log &amp;amp;&amp;amp; echo OK
+OK
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;We can see CRIU created a bunch of image files:
+&lt;img src=&quot;/img/criu-dump.png&quot; alt=&quot;ee&quot; /&gt;&lt;/p&gt;
+
+&lt;h1 id=&quot;collect-process-tree-and-freeze-it&quot;&gt;Collect Process Tree And Freeze It&lt;/h1&gt;
+
+&lt;h2 id=&quot;the-mechanics&quot;&gt;The Mechanics&lt;/h2&gt;
+
+&lt;p&gt;TL;DR There are three steps:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;Collect process tree and freeze it&lt;/strong&gt;&lt;/li&gt;
+  &lt;li&gt;Collect tasks’ resources and dump them&lt;/li&gt;
+  &lt;li&gt;Cleanup&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;More details at &lt;a href=&quot;https://criu.org/Checkpoint/Restore&quot;&gt;CRIU explains checkpont/restore&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;code-implementation-of-collecting-process-tree&quot;&gt;Code Implementation of Collecting Process tree&lt;/h3&gt;
+
+&lt;p&gt;The entry code located at &lt;code class=&quot;highlighter-rouge&quot;&gt;./criu/criutools.c&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/criu-entry.png&quot; alt=&quot;entry&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;So still remember the command we used to dump the process ?&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;criu dump -t $pid -vvv -o dump.log 
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;We passed the pid of our process to the &lt;code class=&quot;highlighter-rouge&quot;&gt;-t&lt;/code&gt; flag,  &lt;code class=&quot;highlighter-rouge&quot;&gt;-t&lt;/code&gt; flag can be written as &lt;code class=&quot;highlighter-rouge&quot;&gt;--tree&lt;/code&gt; as well,  CRIU would then walk though /proc/$pid/task/ directory collecting threads and through the /proc/$pid/task/$tid/children to gathers children recursively.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;-t|--tree PID         checkpoint a process tree identified by PID
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;The CRIU command options are parsed in &lt;code class=&quot;highlighter-rouge&quot;&gt;criutools.c&lt;/code&gt; to execute dumping task&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;if (opts.mode == CR_DUMP
+	if (!opts.tree_id)
+		goto opt_pid_missing;
+		return cr_dump_tasks(opts.tree_id);
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Now we jumped into &lt;code class=&quot;highlighter-rouge&quot;&gt;cr-dump.c&lt;/code&gt; to see what’s going on:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;/*
+* The collect_pstree will also stop (PTRACE_SEIZE) the tasks
+* thus ensuring that they don't modify anything we collect
+* afterwards.
+*/
+
+if (collect_pstree())
+	goto err;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;As you can read &lt;a href=&quot;https://criu.org/Freezing_the_tree&quot;&gt;here&lt;/a&gt;, CRIU supports two different methods for freezing the state of the process and its sub tasks.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Capturing them with ptrace&lt;/li&gt;
+  &lt;li&gt;Freezing them using freezer cgroup.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;By default, CRIU makes use of ptrace to stop the process, so here we just go through with the ptrace method&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;The ptrace() system call provides a means by which one process (the “tracer”) may observe and control the execution of another process (the “tracee”), and examine and change the tracee’s memory and registers. It is primarily used to implement breakpoint debugging and system call tracing.
+ See https://man7.org/linux/man-pages/man2/ptrace.2.html&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;int collect_pstree(void)
+{
+	pid_t pid = root_item-&amp;gt;pid-&amp;gt;real;
+	int ret = -1;
+	struct proc_status_creds creds;
+
+	timing_start(TIME_FREEZING);
+
+	/*
+	 * wait4() may hang for some reason. Enable timer and fire SIGALRM
+	 * if timeout reached. SIGALRM handler will do  the necessary
+	 * cleanups and terminate current process.
+	 */
+	alarm(opts.timeout);
+
+	if (opts.freeze_cgroup &amp;amp;&amp;amp; cgroup_version())
+		goto err;
+
+	pr_debug(&quot;Detected cgroup V%d freezer\n&quot;, cgroup_v2 ? 2 : 1);
+
+	if (opts.freeze_cgroup &amp;amp;&amp;amp; freeze_processes())
+		goto err;
+
+	if (!opts.freeze_cgroup &amp;amp;&amp;amp; compel_interrupt_task(pid)) {
+		set_cr_errno(ESRCH);
+		goto err;
+	}
+	....
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;CRIU uses the request value PTRACE_INTERRUPT and PTRACE_SEIZE  of ptrace():&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;See https://man7.org/linux/man-pages/man2/ptrace.2.html&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;We can see from the code, CRIU first checks if the &lt;code class=&quot;highlighter-rouge&quot;&gt;freeze_cgroup&lt;/code&gt; flag is set, if it is not set, the ptree method would be used.&lt;/p&gt;
+
+&lt;p&gt;CRIU send &lt;code class=&quot;highlighter-rouge&quot;&gt;PTRACE_SEIZE&lt;/code&gt; request using ptree system call with the calling process we want to dump, &lt;code class=&quot;highlighter-rouge&quot;&gt;PTRACE_SEIZE&lt;/code&gt; does not stop the process but returns the stop signal, a &lt;code class=&quot;highlighter-rouge&quot;&gt;PTRACE_SEIZE&lt;/code&gt;d process can accept &lt;code class=&quot;highlighter-rouge&quot;&gt;PTRACE_INTERRUPT&lt;/code&gt; (&lt;code class=&quot;highlighter-rouge&quot;&gt;PTRACE_INTERRUPT&lt;/code&gt; only works on tracees attached by &lt;code class=&quot;highlighter-rouge&quot;&gt;PTRACE_SEIZE&lt;/code&gt;), so we can see CRIU send &lt;code class=&quot;highlighter-rouge&quot;&gt;PTRACE_INTERRUPT&lt;/code&gt; request to actually stop the  process after it has been SEIZEd, also,  the “seized” behavior just we described here will be inherited by all children processes.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; PTRACE_INTERRUPT only works on tracees attached by PTRACE_SEIZE.
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;int compel_interrupt_task(int pid)
+{
+	int ret;
+
+	ret = ptrace(PTRACE_SEIZE, pid, NULL, 0);
+	if (ret) {
+		/*
+		 * ptrace API doesn't allow to distinguish
+		 * attaching to zombie from other errors.
+		 * All errors will be handled in compel_wait_task().
+		 */
+		pr_warn(&quot;Unable to interrupt task: %d (%s)\n&quot;, pid, strerror(errno));
+		return ret;
+	}
+
+	/*
+	 * If we SEIZE-d the task stop it before going
+	 * and reading its stat from proc. Otherwise task
+	 * may die _while_ we're doing it and we'll have
+	 * inconsistent seize/state pair.
+	 *
+	 * If task dies after we seize it but before we
+	 * do this interrupt, we'll notice it via proc.
+	 */
+	ret = ptrace(PTRACE_INTERRUPT, pid, NULL, NULL);
+	if (ret &amp;lt; 0) {
+		pr_warn(&quot;SEIZE %d: can't interrupt task: %s\n&quot;, pid, strerror(errno));
+		if (ptrace(PTRACE_DETACH, pid, NULL, NULL))
+			pr_perror(&quot;Unable to detach from %d&quot;, pid);
+	}
+
+	return ret;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Once CRIU has done sending &lt;code class=&quot;highlighter-rouge&quot;&gt;PTRACE_SEIZE&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;PTRACE_INTERRUPT&lt;/code&gt; request in the &lt;code class=&quot;highlighter-rouge&quot;&gt;compel_interrupt_task&lt;/code&gt; method, it then waits in the &lt;code class=&quot;highlighter-rouge&quot;&gt;compel_wait_task&lt;/code&gt; method for the task to be actually stopped by parsing and checking the status from &lt;code class=&quot;highlighter-rouge&quot;&gt;/proc/PID/status&lt;/code&gt;.
+&lt;img src=&quot;/img/image-20220910175420710.png&quot; alt=&quot;image&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;In the &lt;code class=&quot;highlighter-rouge&quot;&gt;compel_wait_task&lt;/code&gt; method we can see that CRIU also retrieves information about the signal that caused the stop by using &lt;code class=&quot;highlighter-rouge&quot;&gt;PTRACE_GETSIGINFO&lt;/code&gt; request, it will set the &lt;code class=&quot;highlighter-rouge&quot;&gt;PTRACE_O_TRACESYSGOOD&lt;/code&gt; option to distinguish syscall-stops from other kinds of ptrace-stops, since it is reliable and does not incur a performance penalty (see more at &lt;a href=&quot;https://man7.org/linux/man-pages/man2/ptrace.2.html&quot;&gt;here&lt;/a&gt;)&lt;/p&gt;
+
+&lt;p&gt;By doing this, CRIU makes sure that the task is stopped by a supported stop signal and send it again to restore task state before criu intervention.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ret = ptrace(PTRACE_GETSIGINFO, pid, NULL, &amp;amp;si);
+	if (ret &amp;lt; 0) {
+		pr_perror(&quot;SEIZE %d: can't read signfo&quot;, pid);
+		goto err;
+	}
+
+....
+
+	if (ptrace(PTRACE_SETOPTIONS, pid, NULL, PTRACE_O_TRACESYSGOOD)) {
+		pr_perror(&quot;Unable to set PTRACE_O_TRACESYSGOOD for %d&quot;, pid);
+		return -1;
+	}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Also worth mentioning,  all the sub-processes and threads of this process would also be stopped by repeating &lt;code class=&quot;highlighter-rouge&quot;&gt;compel_interrupt_task&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;compel_wait_task&lt;/code&gt; method in a Deep-First-Search manner.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;static int collect_threads(struct pstree_item *item)
+{
+	...
+	for (i = 0; i &amp;lt; nr_threads; i++) {
+		...
+		if (!opts.freeze_cgroup &amp;amp;&amp;amp; compel_interrupt_task(pid))
+			continue;
+		...
+		ret = compel_wait_task(pid, item_ppid(item), parse_pid_status, NULL, &amp;amp;t_creds.s, NULL);
+		if (ret &amp;lt; 0) {
+			/*
+			 * Here is a race window between parse_threads() and seize(),
+			 * so the task could die for these time.
+			 * Don't worry, will try again on the next attempt. The number
+			 * of attempts is restricted, so it will exit if something
+			 * really wrong.
+			 */
+			continue;
+		}
+	....
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;static int collect_children(struct pstree_item *item)
+{
+	...
+	for (i = 0; i &amp;lt; nr_children; i++) {
+		...
+		if (!opts.freeze_cgroup)
+			/* fails when meets a zombie */
+			__ignore_value(compel_interrupt_task(pid));
+
+		ret = compel_wait_task(pid, item-&amp;gt;pid-&amp;gt;real, parse_pid_status, NULL, &amp;amp;creds.s, NULL);
+		if (ret &amp;lt; 0) {
+			/*
+			 * Here is a race window between parse_children() and seize(),
+			 * so the task could die for these time.
+			 * Don't worry, will try again on the next attempt. The number
+			 * of attempts is restricted, so it will exit if something
+			 * really wrong.
+			 */
+			ret = 0;
+			xfree(c);
+			continue;
+		}
+
+		if (ret == TASK_ZOMBIE)
+			ret = TASK_DEAD;
+		else
+			processes_to_wait--;
+
+		if (ret == TASK_STOPPED)
+			c-&amp;gt;pid-&amp;gt;stop_signo = compel_parse_stop_signo(pid);
+		...
+		/* Here is a recursive call (Depth-first search) */
+		ret = collect_task(c);
+		if (ret &amp;lt; 0)
+			goto free;
+	}
+	...
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Now that the process’s tasks tree is all frozen, CRIU does the following:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Lock the network&lt;/li&gt;
+  &lt;li&gt;Collect File Locks&lt;/li&gt;
+  &lt;li&gt;Collect Namespaces&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;We will dive into these parts in the next blog : )&lt;/p&gt;</content><author><name></name></author><category term="criu" /><category term="Linux" /><summary type="html">First, What is CRIU?</summary></entry><entry xml:lang="zh"><title type="html">从过去失败的个人项目学到的几点</title><link href="http://localhost:4000/blog/2022/08/28/" rel="alternate" type="text/html" title="从过去失败的个人项目学到的几点" /><published>2022-08-28T00:00:00+08:00</published><updated>2022-08-28T00:00:00+08:00</updated><id>http://localhost:4000/blog/2022/08/</id><content type="html" xml:base="http://localhost:4000/blog/2022/08/28/">&lt;p&gt;最近一直在思考这个问题, 为什么感觉产出很少,明明想法很多,最后他们都待在我的project list 不断地给让我焦虑和感到压力.
+&lt;br /&gt;
+尤其是看到伟大的互联网源源不断的有人实现了我曾经的idea, 包括但不限于以下几个分类:&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;&lt;strong&gt;写出了很好的技术文章传道解惑&lt;/strong&gt;.  其中有很大一部分并不是简单的复制粘贴和人云亦云,而是高屋建瓴地令人豁然开朗.哪怕Github trending很多都是awsome curated list, 但我觉得这仍然是一件需要执行力去收集归纳的事, who did the move who got the stars , that simple but hard to practice.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;写出了能被别人使用的工具&lt;/strong&gt;.  应该是我尝试最多又半途而废最多的一类project.&lt;/li&gt;
+  &lt;li&gt;输出了有价值的内容. 埃好像和前两个重复了.&lt;/li&gt;
+  &lt;li&gt;拥有了自己的个人品牌. 无论是博客, 播客,都是一种发出自己声音的途径. 
+&lt;br /&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;于是想了想, 大概, 可能, 也许有这几方面原因.&lt;/p&gt;
+&lt;h1 id=&quot;并没有分解project&quot;&gt;并没有分解project&lt;/h1&gt;
+&lt;p&gt;这应该是最重要的点. 每一个personal project最让人快乐的时候,应该是这个点子被创造的时候, 因为那时,我们会直接越过中间执行阶段可能遇到的种种问题,直接畅想到了project完成后的成就感和影响力之后. 可以简单称之为,白日做梦阶段.
+&lt;br /&gt;
+而做一件事最难的点,我觉得是每一步都要想,我下一步应该做什么, 为什么这样做, 这样做了之后,这个project算是closed了吗. 当然这个过程不可避免. 但如果一个project总是带给你的迷惑比正反馈少, 并且除了你自己之外,没有任何外部压力,它大概律会变成尘封的记忆,是不是出来占据你的大脑带宽.
+一个idea如果在被变成一个project之时,只是一句简单的,没有闭环标准,具体目标和下一步暗示的话.
+&lt;br /&gt;
+它就会让人爱而不得, 无可奈何. 而且不明确的project会带出下一个标题, 因为99%的可能你会乐观估计你需要投入的精力和时间.&lt;/p&gt;
+
+&lt;h1 id=&quot;精力和动力不足&quot;&gt;精力和动力不足&lt;/h1&gt;
+&lt;p&gt;展开一个project的时候, 你其实并没有想清楚, 你的投入和预期收益.
+更重要的是, it’s a personal project, no one gives a fuck until you have actually shown them something.
+一时心血来潮的idea,可是一个花费你半年业余时间的错误验证. 也许这也算是让生活不这么无聊的一种方式吧.&lt;/p&gt;
+&lt;h1 id=&quot;活在未来并没有活在当下&quot;&gt;活在未来,并没有活在当下&lt;/h1&gt;
+&lt;p&gt;于是你总会想要开启新的project, 去享受最开始那几分钟的白日梦快乐,畅想未来.
+与此同时, 你的project lost the track of time, 它们呆在角落静静地发霉, 在每个夜晚你闭上眼睛的时候突然诈尸一下.
+总会有更重要的事情,比如996的工作, 时不时要解决的问题. 计划就像是一个刚写好的程序, 你在执行的过程,还需要痛苦地debug,&lt;/p&gt;
+&lt;h1 id=&quot;show-your-work-early-even-its-shitty&quot;&gt;Show your work early, even it’s shitty&lt;/h1&gt;
+&lt;p&gt;不记得这话是谁说的了, 不过确实是这样. 老是想着很多东西完美一点,再给别人看(甚至没有人看). 所以, 我决定写下这篇博客.&lt;/p&gt;
+
+&lt;p&gt;As a reminder.&lt;/p&gt;</content><author><name></name></author><category term="review" /><category term="life" /><summary type="html">最近一直在思考这个问题, 为什么感觉产出很少,明明想法很多,最后他们都待在我的project list 不断地给让我焦虑和感到压力. 尤其是看到伟大的互联网源源不断的有人实现了我曾经的idea, 包括但不限于以下几个分类: 写出了很好的技术文章传道解惑. 其中有很大一部分并不是简单的复制粘贴和人云亦云,而是高屋建瓴地令人豁然开朗.哪怕Github trending很多都是awsome curated list, 但我觉得这仍然是一件需要执行力去收集归纳的事, who did the move who got the stars , that simple but hard to practice. 写出了能被别人使用的工具. 应该是我尝试最多又半途而废最多的一类project. 输出了有价值的内容. 埃好像和前两个重复了. 拥有了自己的个人品牌. 无论是博客, 播客,都是一种发出自己声音的途径.</summary></entry><entry xml:lang="zh"><title type="html">使用Emacs践行GTD的第三年</title><link href="http://localhost:4000/blog/2022/07/22/gtd" rel="alternate" type="text/html" title="使用Emacs践行GTD的第三年" /><published>2022-07-22T00:00:00+08:00</published><updated>2022-07-22T00:00:00+08:00</updated><id>http://localhost:4000/blog/2022/07/22/gtd</id><content type="html" xml:base="http://localhost:4000/blog/2022/07/22/gtd">&lt;h1 id=&quot;故事开始---万恶之源&quot;&gt;故事开始 - 万恶之源&lt;/h1&gt;
+&lt;p&gt;一切故事的开始，总要有一个带头人。&lt;br /&gt;
+还记得那是2019年，我之前在百度实习的leader跳去了一家做深度链接提高广告转化率的创业公司，于是本科毕业后准备申请研究生的我也顺理成章接受了他的邀请，抱着做一些好玩的东西的心态又去跟着他实习。
+这个初创公司有很多大厂跳槽过来的技术大咖，也不乏一些喜欢折腾古怪技术的同事。有一次我和同事在讨论VIM的快捷键使用，当时一个技术前辈捧着电脑经过，问我们要不试试emcas.&lt;/p&gt;
+
+&lt;p&gt;我和同事摇头be like：“那是什么鬼。”&lt;/p&gt;
+
+&lt;p&gt;仿佛等的就是这个回答，那一刻一直埋首在业务代码无处施展技术热情（装逼大法）的前辈眼睛里有了光，当即把我们叫去会议室，画下了这个经典的学习曲线，那一刻会议室不再是会议室，而仿佛一间教堂，开始了传教（不是&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://ithelp.ithome.com.tw/upload/images/20191004/20112470g15euf7TxF.jpg&quot; alt=&quot;emacs&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;那时候年轻的我还不知道所有命运的馈赠都已经暗中标好了价格，比如眼前的这个东西会在很久之后让我ctrl 到死，并且还难以放弃。&lt;/p&gt;
+
+&lt;p&gt;我当时只想什么东西这么酷，我一定要学会它。于是我从emacs仿佛上个世纪搭建的官网上下载了emacs后，开始疯狂地看wiki，倒腾主题，设置快捷键，入了org-mode的坑，每天都在google上搜索千奇百怪的问题，每天都在想着怎么定制化我的emacs. 终于有一天，浸淫emacs论坛，free software论坛，lisp教徒各种乱七八糟的论坛之后，加班完喝了两罐啤酒后的我，受够了windows各种兼容问题，为了更好的使用emacs里的orgmode来践行GTD，把我的HP笔记本重装了ubuntu，然后一直使用到了现在。（&lt;strong&gt;傻逼行为大赏&lt;/strong&gt;)&lt;/p&gt;
+
+&lt;h1 id=&quot;emacs宗教&quot;&gt;Emacs宗教&lt;/h1&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTzNK7QA1EDcJHnTVDf0g8PWgMwtMWMj4utgDwyoMnXB6-bT0C5oJT1cxieQ_v6nhJn38k&amp;amp;usqp=CAUhttp://&quot; alt=&quot;emacs church&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;这里还想多提一下，emacs宗教这个很有意思的背景。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://res.cloudinary.com/practicaldev/image/fetch/s--CfKxDwYn--/c_limit%2Cf_auto%2Cfl_progressive%2Cq_auto%2Cw_880/https://dev-to-uploads.s3.amazonaws.com/uploads/articles/yey5phikt92isuffcjlv.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;相信很多人都看过RSM的&lt;a href=&quot;https://item.jd.com/11670019.html&quot;&gt;若为自由故&lt;/a&gt;，书中他因为想修改一个闭源的打印机，就带头掀开了自由软件运动的序幕，虽然这个运动最让人着迷的是群体参与，不止他一个人的功劳，也暂且不提后来与开源观念的各种争议，但这的确会让你跪下来说一声神确实是神。RSM拥有政治家的哲学性，并且在软件领域，堪称成功地完成了他观念的传播和实践，比如GPL的开源传染性。&lt;/p&gt;
+
+&lt;p&gt;曾经有这样一个比喻，free software is like vegan，很多人越来越讨厌极端的素食主义者，原因无非是他们不仅要求自己这样做，也要求别人这样做。但不是每个人都有成为理想主义的前提条件，物质条件，精神境界，甚至代码能力都是要素，而你我大多数也不过是CRUD boy/girl, SQL boy/girl， 忍受加班写着用进废退的业务代码，赚取面包维持生存。&lt;/p&gt;
+
+&lt;p&gt;emacs的宗教戏称可以回溯到emacs和vim的&lt;a href=&quot;https://zh.wikipedia.org/zh-hk/%E7%BC%96%E8%BE%91%E5%99%A8%E4%B9%8B%E6%88%98&quot;&gt;编辑器圣战&lt;/a&gt;,  不过我倒确实喜欢在emca里的终端模拟器用vim(&lt;/p&gt;
+
+&lt;h1 id=&quot;我如何使用emacs管理gtd&quot;&gt;我如何使用emacs管理GTD&lt;/h1&gt;
+
+&lt;p&gt;使用的最多的还是&lt;code class=&quot;highlighter-rouge&quot;&gt;org-mode&lt;/code&gt;, 甚至可以说我唯一使用的就是&lt;code class=&quot;highlighter-rouge&quot;&gt;org-mode&lt;/code&gt;.  &lt;code class=&quot;highlighter-rouge&quot;&gt;org-mode&lt;/code&gt;让我接触到GTD的思想，并且让我在接下来的三年里非常不完美的实践了很久，至今我也觉得我实践得很烂，不仅仅是工具上tweak的时间花费太多，也有很多根本的思维，我也觉得我adapt得不好。&lt;/p&gt;
+
+&lt;p&gt;GTD的精华这一张图就可以描述完：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://upload.wikimedia.org/wikipedia/commons/1/1b/GTDcanonical.png&quot; alt=&quot;gtd&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;但在这里我想在加一个review阶段&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/gtd/gtd.png&quot; alt=&quot;gtd&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;根据这个流程，其实我的gtd文件夹下大致有这几个文件：&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;inbox.org&lt;/strong&gt; - 用于collect阶段, 尤其侧重在使用PC端的时候去天马行空捕捉各种潜在的想法。为什么强调PC端，因为emacs有个在我看来很致命的缺点，后面会提到。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;projects.org&lt;/strong&gt; - 用于process阶段。如果一个任务需要多步去完成，那么它就会变成一个project, 会被放进projects.org，用于在plan阶段的时候再去分解为不同类型的单个任务。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;waiting.org&lt;/strong&gt; - 用于process阶段。如果一个任务需要依靠别人去完成，那么它就会被放进waiting list， 等待review的时候再去check, 转化为我可以做的action&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;next.org&lt;/strong&gt; - 用于process阶段。如果一个任务需要依靠不同场景去完成，比如你需要在电脑旁，你需要在户外，需要在公司，那么它就会被扔进next list， 用于在不同场景去提示。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;someday.org&lt;/strong&gt; -  用于process阶段。如果一个任务在评估后当下的时间没办法投入，它一般都是一个需要多步完成的project,&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;journals.org&lt;/strong&gt; - 用于do阶段，根据inbox和projects里的内容分解后，有特定时间限制的任务都会被添加 journals.org 里，然后被org-agenda自动生成calendar的schedule.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;habits.org&lt;/strong&gt; - 用于do阶段， 根据inbox和projects里的内容分解后，需要重复做很多次的任务就会形成一个habit，比如你的目标是面试，那么每天刷几道力扣就会是一个habit，orgmode自带的habit属性可以很方便做到这点，它会把设定的habit周期自动添加进calendar&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;goals.org&lt;/strong&gt; - 用于review阶段和organize阶段，类似于GTD里面的纵向审视，三万英尺的高度（参见GTD3里面），大致是一到两年内的目标，参考它会在organize阶段确认这个任务到底会被放进需要精力投入的proje.org里，还是需要暂时搁置的someday.org里，review阶段也需要参考它来确认没有将自己的精力远离goals.org里的目标。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;vision.org&lt;/strong&gt; - 用于review阶段和organize阶段，纵向审视，四万英尺的高度，五到十年的目标。参考它可以调整和把控goals.org里面的内容。review阶段也需要参考它来确认没有将自己的精力远离vision.org里的目标&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;review.org&lt;/strong&gt; - 用于review阶段，会去清空inbox里面的内容，再去审视project, goals, vision里面的内容去重新加入inbox,  最后将每周的情况写入review.org里面&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;我学会了什么&quot;&gt;我学会了什么&lt;/h1&gt;
+
+&lt;p&gt;这整个过程中其实并没有达到我最初的学习目的。因为最开始是想通过emacs学会lisp，但后面发现大部分时间都用于修改和tweak别人写好的插件。学生时代还有一大把时间可以用来折腾，但工作后就明显力不从心了。&lt;/p&gt;
+
+&lt;p&gt;学会最多的应该就是emacs各种深度绑定的快捷键。以及我每换一个电脑，都会习惯性地把win/mac home键重新映射成ctrl键，不过我现在已经没有买ctrl脚踏板的激情了。&lt;/p&gt;
+
+&lt;p&gt;但不得不提，emacs的确给了你一种自由的感觉，在这里你可以定义一切，只要你知道how it works, 你可以修改源码，自己写插件，看每年emacs大会开发者们在emacs里做各种看上去奇奇怪怪的事。比如我印象很深刻的就是有一年，有人在&lt;a href=&quot;https://news.ycombinator.com/item?id=15835179&quot;&gt;emacs里成功点了一份披萨&lt;/a&gt; 。&lt;/p&gt;
+
+&lt;p&gt;我是典型的对emacs重器轻用，但不妨碍在这个过程中喜欢，欣赏geek之间的创造力，对how it works的极度熟悉后，他们才拥有实现创意的资本和能力。虽然RSM一直在推广自由软件，但是我想有时候前面的“自由”两个字，更像是能力作为前提，自由意味着有作选择的资本。当我没有能力或者不知道一个东西是怎么运作的时候，我就失去了选择的机会，只会用稳定，无聊，但能满足我手上工作需求的专制软件。&lt;/p&gt;
+
+&lt;p&gt;用emacs也是一个逐步接近自由软件思想的过程，会遇到很多挫折，但又着迷地想解决它，一直到最后发现自己走太远了，好像除了好奇心一无所获。但依然，我觉得它的某一部分会留在你的编程生涯里，让你回想起当时花了两天改配置或者n天试着用emacs去发短信，点外卖的傻逼岁月。&lt;/p&gt;
+
+&lt;h1 id=&quot;我放弃了什么&quot;&gt;我放弃了什么&lt;/h1&gt;
+
+&lt;p&gt;就像前面所讲的，我放弃的第一步应该就是用&lt;strong&gt;emacs作为inbox收集器&lt;/strong&gt;，因为org-capture要求你必须在PC端，而工作后因为安全相关，很多东西无法同步，而emacs的移动应用堪称凤毛麟角，也丧失了它在PC端的优势，哪怕我尝试过orgzly，最后还是作罢。
+现在更多的用flomo, pocket还有chrmo 书签页作为标记。偶尔搭配org-capture一起使用&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/inboxsystem.png&quot; alt=&quot;inbox&quot; /&gt;&lt;/p&gt;
+
+&lt;h1 id=&quot;重读gtd之后&quot;&gt;重读GTD之后&lt;/h1&gt;
+
+&lt;p&gt;最近又重读了一遍GTD，倒是又遗留了一些问题。&lt;/p&gt;
+
+&lt;h3 id=&quot;第二大脑真的能在体外吗&quot;&gt;第二大脑真的能在体外吗&lt;/h3&gt;
+
+&lt;p&gt;GTD的核心观点之一就是第二大脑，因为我们获取我们注意力的事务实在是太多了，这也是我们焦虑和压力的来源。那么如果我们有一个系统可以妥善，合理，可靠地整理这些混乱，我们的大脑就不会投入过多的关注。
+但问题是接下来这点，&lt;strong&gt;我无法完全信任我的GTD系统&lt;/strong&gt;。我总是想改善它，调整它而本末倒置，这一点用在emacs上更加明显。&lt;/p&gt;
+
+&lt;h3 id=&quot;当一件事近在眼前的紧急时你会忘了这一切流程只剩下to-do&quot;&gt;当一件事近在眼前的紧急时，你会忘了这一切流程，只剩下to-do&lt;/h3&gt;
+
+&lt;p&gt;我的GTD记录常常会在我遇到一个很紧急的项目事，断更很长时间。一直到我完成项目，松一口气才会又回到我的GTD上，因为当你面对很紧急的任务的时候，你不会再需要任何时间管理工具，因为分秒必争的注意力都已经给了它。&lt;/p&gt;
+
+&lt;h3 id=&quot;gtd的project又变成讨厌的to-do-list-curse&quot;&gt;GTD的project又变成讨厌的TO-DO list curse&lt;/h3&gt;
+
+&lt;p&gt;当GTD的project list中某一个project搁置很久之后，它又会变成一个让你焦虑的to do list ，因为你在设定项目的时候，没有考虑到为这件事投入的精力和最终想要达成的明确的目标。&lt;/p&gt;
+
+&lt;h1 id=&quot;其他&quot;&gt;其他&lt;/h1&gt;
+
+&lt;h3 id=&quot;能力跟不上野心想法跟不上学习动手能力&quot;&gt;能力跟不上野心，想法跟不上学习/动手能力&lt;/h3&gt;
+
+&lt;p&gt;用在emacs上很合题。&lt;/p&gt;
+
+&lt;h3 id=&quot;沉没成本&quot;&gt;沉没成本&lt;/h3&gt;
+
+&lt;p&gt;用熟悉emacs后，尤其它和你最在乎的任务管理系统互相绑定后（这时候David Allen 应该会对我大吼：GTD可以用任何简单的系统去实践  =。=），从头再移到另一个系统的沉没成本就显得很高。每当我想拓展什么新功能而失败好几天想弃用emacs的时候，心里总有个声音在说，你还没真正用elisp写出一个插件来，你都没用过lisp写过几行代码，你怎么能放弃！（ =。=  有点像健身，不舍得放开刚刚有一点肌肉的轮廓的自己。&lt;/p&gt;
+
+&lt;p&gt;几乎每隔一段时间都能看到不同的人对emacs的炮轰，因为操作门槛太高，得不偿失，不是所有人都喜欢customize everythin， emacs是功能很强大到如同一个操作系统，但是然后呢？你不需要用一个操作系统去当编辑器。你只会在操作系统里去使用一个可用性高，快速帮你解决问题的编辑器，曾经一个很经典的视频 &lt;a href=&quot;https://www.youtube.com/watch?v=8kCd4w4kc68&quot;&gt;10 years of love for Emacs undone by a week of VSCode&lt;/a&gt;。而emacs就像一个无所不能的机器人，但只有你学会正确的指令，才让随心所欲地让它听你号令。&lt;/p&gt;
+
+&lt;p&gt;最近几年双链笔记应用。然后emacs的orgmode又被拿出来鞭尸。不过&lt;strong&gt;移动端同步&lt;/strong&gt;确实是orgmode一大痛点，虽然在PC端真是称王的存在。这么多年辗转用了印象笔记，onenote, 再到emacs, notion甚至obsidian。越来越觉得重器轻用可能才是最终之道。&lt;/p&gt;
+
+&lt;p&gt;希望在新的这一年（也不算新了），我能够写一个emacs的插件just for fun,&lt;/p&gt;
+
+&lt;p&gt;happy hacking.&lt;/p&gt;</content><author><name></name></author><category term="org-mode" /><category term="emacs" /><category term="What-I-Learnt" /><summary type="html">故事开始 - 万恶之源 一切故事的开始，总要有一个带头人。 还记得那是2019年，我之前在百度实习的leader跳去了一家做深度链接提高广告转化率的创业公司，于是本科毕业后准备申请研究生的我也顺理成章接受了他的邀请，抱着做一些好玩的东西的心态又去跟着他实习。 这个初创公司有很多大厂跳槽过来的技术大咖，也不乏一些喜欢折腾古怪技术的同事。有一次我和同事在讨论VIM的快捷键使用，当时一个技术前辈捧着电脑经过，问我们要不试试emcas.</summary></entry><entry xml:lang="zh"><title type="html">扬起这把海盗旗不是一天两天</title><link href="http://localhost:4000/blog/2021/02/05/" rel="alternate" type="text/html" title="扬起这把海盗旗不是一天两天" /><published>2021-02-05T00:00:00+08:00</published><updated>2021-02-05T00:00:00+08:00</updated><id>http://localhost:4000/blog/2021/02/</id><content type="html" xml:base="http://localhost:4000/blog/2021/02/05/">&lt;p&gt;一直对版权这个词态度存疑，它的发明也不过是近代史时间内。&lt;/p&gt;
+
+&lt;p&gt;再往前推，所谓版权是不是就是王孙贵族才能看？更像是某种思想特权，而知识文艺类作品能得到广泛传播带来的影, 一场文艺复兴就诠述得淋漓尽致.&lt;/p&gt;
+
+&lt;p&gt;不否认它可以保护创作者的利益，但它显然也可以成为某种思想利器。一些观点可以参见关于世界上最大的盗版网站海盗湾的纪录片《现实生活中的海盗湾》，版权的出现是为了保护知识产权和保障创造者的正当权益，但它不一定是唯一正确的方式，它的适用范围和影响到现在都有很多争议。&lt;/p&gt;
+
+&lt;p&gt;版权的正当性是建立在一个有合理价格的自由市场上，在这里人们有接触正版的选择，有选择才有权利, 有选择才可以谈承担后果, 不要用不存在的选择去倒逼一个错的结果。&lt;/p&gt;
+
+&lt;p&gt;然而censorship和价格垄断包装成所谓知识产权也不是一天两天了，不然为什么Aaron Swartz要为偷盗没给版权费的论文而自杀？版权的问题不是盗版，而是不合理的贪婪，敢怒不敢言的垄断和censorship.&lt;/p&gt;
+
+&lt;p&gt;可笑的是，最先拱火的是同行幸灾乐祸，字幕组之间互踩，扯什么完美受害人，不要说谁一分不赚用爱发电就是最高尚。而我们谈论的其实是普遍违法，选择执法带来的糟糕影响。&lt;/p&gt;
+
+&lt;p&gt;这不是个完美世界，说真的，与其当无可挑剔的卫道士，不如从高墙和鸡蛋的角度选择你站哪边。不要做那类哭着求porn番号然后自己爽了擦干净手转头就骂盗版可耻的人，都先不扯解决你情感需求的影视作品，就说你人生中有几次合理合法地给解决生理需求的porn付过版权费。&lt;/p&gt;
+
+&lt;p&gt;互联网的基因里就赤裸裸写满了复制，大众传播和盗版，这里是最糟糕的天堂，也是即将被打扫干净的地狱。&lt;/p&gt;
+
+&lt;p&gt;虽然但是，不要在眼睁睁看着它fucked up的途中那么道德媚俗。&lt;/p&gt;</content><author><name></name></author><category term="Life" /><summary type="html">一直对版权这个词态度存疑，它的发明也不过是近代史时间内。</summary></entry><entry xml:lang="zh"><title type="html">如何成为一个数字极简主义者</title><link href="http://localhost:4000/blog/2020/08/02/how-to-be-a-digital-minimalist" rel="alternate" type="text/html" title="如何成为一个数字极简主义者" /><published>2020-08-02T00:00:00+08:00</published><updated>2020-08-02T00:00:00+08:00</updated><id>http://localhost:4000/blog/2020/08/02/how-to-be-a-digital-minimalist</id><content type="html" xml:base="http://localhost:4000/blog/2020/08/02/how-to-be-a-digital-minimalist">&lt;p&gt;这篇读后感其实也是拖了很久，最早是在今年二月份疫情最严重的时候开始读Cal Newport的Digital Minimalisim. 因为那时候在最大限度的推行社交隔离制度，大家都呆在家里，与之而来的就是，二十四小时高强度的使用手机和一切电子产品。&lt;/p&gt;
+
+&lt;p&gt;每天醒来第一件事情就是看微博上最新的坏消息，在真真假假的自媒体或夸张或现实的标题中苦苦思辨。我感觉我的生活已经被手机控制了，但同时，去对抗触手可及的来自2020的世界信息洪流又仿佛一件无比艰难，自我折磨的事。使用手机现在就像使用一个外在的器官一样常见，仿佛眼睛，耳朵一样的器官。不仅如此，手机在对抗疫情中被充满争议的使用（智能手机的健康码去区分和追踪感染人员从而实施相应措施），甚至让它变成了身份证一样必不可少的个人身份证明。&lt;/p&gt;
+
+&lt;p&gt;每当我失败于自我控制，忍不住去打开手机，像一个药物上瘾的小白鼠刷新最新的信息时，除了自我失望，还伴随一种疑惑。这种疑惑让我不仅仅把合理使用手机和数字化产品简单视为一种自律，或者说个人意志力的体现，而是开始思考这件事也许比我想象的更为复杂，也许这从一开始就不是一场公平的较量呢？&lt;/p&gt;
+
+&lt;p&gt;越失败于约束自己不受电子产品的控制，就越沮丧，就越无可奈何的越来越沉迷其中。而这显然不是一种正确的感觉，也变成了我开始看Digital Minimalisim这本书的启机。&lt;/p&gt;
+
+&lt;p&gt;我们真的了解我们的敌人吗？ 我们真的知道智能手机背后有一个凭借注意力经济（attention economy）建立起来的庞大资金帝国吗？当我们提到智能手机，就无法绕开谈论Steve Jobs 和iPhone, 也就来到可能是当代果粉最大的争议和迷题之一:&lt;/p&gt;
+
+&lt;p&gt;如果乔布斯复活后，他作为一个终生极简主义者，发现他一手促成的智能手机变成了最令当代人着迷上瘾的物品后，会是什么态度？这是他所希望我们使用智能手机的方式吗。也许作为被动的用户，我们常常不知道我们想要什么，那这是他想给我们的unexpected customer gains吗？&lt;/p&gt;
+
+&lt;p&gt;以Digital minimalists这派为代表的觉得乔布斯其实只想要会打电话的iPod。所以更多的重度网瘾losers比如我，会更加心安理得接受他们提出的不公平抗争理论。&lt;/p&gt;
+
+&lt;p&gt;当我们作为个人用户试图对抗一个产品的上瘾机制时，实际上对抗的是背后整个行业的资金和人力投入，无数人在背后研究你的用户心理，弱点，疲惫和社会虚荣，无数个垃圾或者牛逼的MVP在快速迭代去实验他们关于人性想法的正确性。而从今天的社交产品来看，他们很多关于人性的验证是对的。比如Cal Newport在书中提到说，人们为什么对社交媒体上瘾，有两点他们想获得：&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Unexpected Feedback&lt;/li&gt;
+  &lt;li&gt;Social Approval&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Unexpected Feedback意味着你可以和你现实生活中从未见到或有机会接触的人产生互动，很多人会以为一个偶然的段子而被转发成千上万次，这种Feedback甚至可以来自别人的timeline, 在往下拉刷新前，你永远不会知道会刷到什么样的动态，我们就像被投喂的小白鼠，焦急地等待那可能出现比现实生活更有意思的信息。移动时代，我们从台式机的主动搜索姿态变成了被动接受的姿态。
+Social Approval 更是一种可以带来个人成就感的因素，网络的普及降低了上网的成本和门槛，也因此带来了前所未有的观点碰撞。渴望被人认同，甚至是崇拜几乎是我们的本性，所以可观的点赞和转发数字可以带来那么多满足感，哪怕这种满足感仅仅是在线上的虚拟空间，但多巴胺的分泌依旧是真实的。
+这两点就是社交巨头用来构建上瘾机制的关键，毕竟，我们已经生活在这样一个时代，在这里我们对自己的了解都不一定有数据公司对我们的了解更多。所以有时候不算自制力失败，而是正常的实力悬殊差距。并且，社交功能永远是互联网的冠上明珠，廉价，好用，直击人性，永不过时。任何你觉得可以用来做社交的应用，最后一定都会用来做社交。&lt;/p&gt;
+
+&lt;p&gt;那么我们应该做什么去增加一点我们微小的胜算呢？ 为了赢得我们注意力和时间的胜算。
+Cal Newpot给出了几个成为数字极简主义者的操作建议。&lt;/p&gt;
+
+&lt;h2 id=&quot;1-学会独处&quot;&gt;1. 学会独处&lt;/h2&gt;
+&lt;p&gt;Cal 列举了很多例子，从林肯，马丁路德金，梭罗，到本杰明富兰克林甚至伍尔夫的例子，他认为保持适当的独处时间是他们能保持清醒头脑并从事创造性活动的一个重要帮助。而现代越来越多电子屏幕在不断损害我们保持独处思考的能力(solitude deprivation)，因为就算我们一个人，我们也会不自觉拿出手机和其他人保持互动。&lt;/p&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;Solitude can be just as important for both happiness and productivity&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Three crucial benefits provided by solitude: “ New ideas; an understanding of teh self; and closeness to others.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;因此，为了达到独处的目的，Cal建议我们可以尝试：&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;将手机放在家&lt;/li&gt;
+  &lt;li&gt;长距离散步去保持思考&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&quot;2-不要点赞&quot;&gt;2. 不要点赞&lt;/h2&gt;
+&lt;p&gt;这一点听上去有点奇怪，但在Cal的论据中Fair enough,  人类是天然的社会动物，而随着人类的进化，社交方式也在不断被重新定义。一个明显的趋势是，线上的虚拟聊天在逐渐侵蚀了线下真实生活的面对面交流。
+我甚至都已经很难再想起，当智能手机出现以前，我们在聊天，等地铁，排队，无所事事的间隙，在干些什么。
+点赞，作为一种用最简单的动作，在充满复杂信息流的线上世界去探讨问题的交流方式，无疑是对社会动物大脑的一种浪费和侮辱。它将思辩的面对面交流方式变成了一种非黑即白的压抑思考的动作。而且，这更可能促进网络上越来越极端并简单划分的分裂立场。&lt;/p&gt;
+
+&lt;h2 id=&quot;3-重新寻找娱乐方式&quot;&gt;3. 重新寻找娱乐方式&lt;/h2&gt;
+&lt;p&gt;对应数字极简，这些娱乐方式显然可以是不需要智能手机，电脑的，户外徒步，骑行，都是很好的一些选择。
+而我，最近迷上了滑板。 （—。—&lt;/p&gt;
+
+&lt;h2 id=&quot;4-抵抗注意力经济&quot;&gt;4. 抵抗注意力经济&lt;/h2&gt;
+&lt;p&gt;这里Cal 提出了一种 “Slow Media”的概念，和之前的慢节奏生活，慢食物文化很相似。虽然我google半天也没有找到几个明确被标榜为Slow media的读物，但我想Slow Media应该代表着传统经典，稍微有点精英定位的媒体读物，也就意味着经典和晦涩，而它们又恰恰是各种看似通俗易懂的快餐文章的源泉。
+如果我们刻意去读不那么碎片化的电子媒介。也许我们的注意力就能被省下来更多。&lt;/p&gt;</content><author><name></name></author><category term="reading" /><category term="review" /><summary type="html">这篇读后感其实也是拖了很久，最早是在今年二月份疫情最严重的时候开始读Cal Newport的Digital Minimalisim. 因为那时候在最大限度的推行社交隔离制度，大家都呆在家里，与之而来的就是，二十四小时高强度的使用手机和一切电子产品。</summary></entry><entry xml:lang="zh"><title type="html">《技术的本质》：我们如何理解和看待技术？</title><link href="http://localhost:4000/blog/2020/07/26/the-nature-of-technology" rel="alternate" type="text/html" title="《技术的本质》：我们如何理解和看待技术？" /><published>2020-07-26T00:00:00+08:00</published><updated>2020-07-26T00:00:00+08:00</updated><id>http://localhost:4000/blog/2020/07/26/the-nature-of-technology</id><content type="html" xml:base="http://localhost:4000/blog/2020/07/26/the-nature-of-technology">&lt;p&gt;从KK的《失控》那里了解到复杂性科学， 顺便入了网络科学和复杂经济学的坑， 不知道怎么就找到了这本布莱恩的《技术的本质》。 看这本书拖拉了很久， 但也确实看得津津有味， 因为试着将布莱恩提出的理论套用在平时学习和工作中产生的一些疑惑上， and some parts seem fair enough.&lt;/p&gt;
+
+&lt;p&gt;有时候忍不住在想，技术对我们这种技术工人一样的程序员究竟意味着什么？无法否认，对这个高度连接又深度分裂的世界而言，技术的本质是个宏大无比的主题，它是如此与人类社会息息相关，大到一场永远改变世界的工业革命，小到一个个体被科技生活异化后的孤独瞬间。&lt;/p&gt;
+
+&lt;p&gt;试图站在人文和科技的交叉点，就意味着永远充满了分裂感，疑惑，多虑，以及反思。&lt;/p&gt;
+
+&lt;p&gt;如果我们接受技术不是凭空出现的黑魔法，不是上帝创世时的施恩，也不是外星高级生物留下的文明印迹，那么我们就必须得回答，也就是布莱恩阿瑟在书中所追问的，那些带给我们舒适生活和无尽财富，成就经济繁荣的技术，究竟从何而来，又是在何时如何进化的？&lt;/p&gt;
+
+&lt;p&gt;但这个问题很长一段时间并没有被工程师或者技术人员所看见，反而更多的被社会科学家和哲学家所思考探讨。与之而来的，文学家们对技术这个词充满了某种敌意，因为他们在钟爱的哲学家们那里看到对这个词语的质疑，却无法从技术的狂热信徒那里的得到一个满意的共识。人文科学需要的解释不是黑白分明，绝对，简单，优雅而正确的原理和公式，而工程师们追随着被笛卡尔启蒙的理性主义，沉浸在完美解释组成这个复杂世界里一个又一个的原理中的快感和控制感中。矛盾之处在于，工程师那种了解一切，确定清晰的造物主感受只有当他们作为内部思考者才会有，他们了解某个具体的模块，某项具体的技术。但当这些模块组合在一起作用成为一项独立的技术（大众眼里的科技黑箱）被人们从外部使用并发挥作用，它就会变成一项令人咋舌的伟大发明，一种技术的进化，也就是创新。这时候那种控制感就消失了，从布莱恩的生物学角度（就像所有复杂性科学家一样）去解释技术的起源，就像很难想象进化可以被控制，创新可以被简单复制。当然，这两者都有规律。&lt;/p&gt;
+
+&lt;p&gt;而与之而来，创新所带来的经济效应，社会效应，都让这件事变成了一种更适合从整体论看待的问题。&lt;/p&gt;
+
+&lt;p&gt;他给出了技术的三个定义：&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;技术是实现人的目的的一种手段。
+技术是实践和元器件的集成。
+技术是可供某种文化中利用的装置和工程实践的集合。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;在我的大学期间，就看到过这样一句解释：Technology is applied science. 但布莱恩阿瑟认为，技术不同于科学，更甚之，因为技术一直活在科学的阴影下，所以很少有人会去思考关于技术的理论。他用了组合进化和递归性去解释技术的起源，也就是&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;技术在某种程度上一定是来自此前已有技术的新组合。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;因此技术在真实世界中是模块化的，是高度重构的，它们是流动的，永远不会静止，永远不会结束，永远不会完美。递归性就体现在，技术包含着技术，一直到最基础的水平，在计算机世界里，递归可以被直觉上很奇怪地表达为“自己调用自己”，在布莱恩的理论里，更像是技术的结构中包含某种程度的自相似组件，所以说技术是由不同等级的技术构建而成（我在这里很自然想到自我复制的生物性，当然也是复杂性科学里面一个很经典的主题。&lt;/p&gt;
+
+&lt;p&gt;为此他在书中描述了一个很有趣的关于技术进化的思想实验，在一个逻辑电路的世界里，一开始可用的技术只有NAND电路，给定一个长长的需要某些特定逻辑功能的需求清单，比如AND运算，Exclusive-ORs, 3-bit addtion, 4-bit EQUALS等等，他们实验的目的就是要知道技术系统（这个逻辑电路）能否进化，也就是通过组合已有的元素去创造清单上的功能。在实验的每个步骤，新的电路都会通过随机连接电路的组合方式创造出来，然后系统检查是否这次组合是否出现了清单上的需求功能，一旦出现，就会把这个新功能纳入其中，让它成为进一步连接和组合电路的有效功能。在25万步组合后，他们的系统进化出了一个8-bit加法器（虽然不知道他们代码是否实现了，但感觉特别有意思）。&lt;/p&gt;
+
+&lt;p&gt;另一个让我印象深刻的是布莱恩对经济和技术关系的阐述。他认为经济就是技术的一种表达，首先说他对技术的本质的定义：&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;从本质上看，技术是被捕获并加以利用的现象的集合。或者说，技术是对现象有目的的编程。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;然后我们来到了布莱恩大名鼎鼎的反传统经济学定义，也就是他的复杂经济学理论的预告：&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;我将经济定义为一套安排和活动，一个社会将借助它来满足需求。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;这样一定义，经济活动是为了实现我们的需求，人类的目的，也满足技术的定义，经济也是一种目的性系统。所以其实经济也是一种技术，或者说，技术构成了经济的框架。就像我们可以发现现在世界上一半的财富几乎都在少于十个人的手上，而他们之中大部分都来自美国的互联网技术公司，技术决定了经济结构并塑造了这个世界的样子，但我们不能事先确定哪种技术会被选择来进化（如果从进化论的角度来说）。&lt;/p&gt;
+
+&lt;p&gt;当然，每次技术进化后的世界依然是不完美的，问题重重的。化石技术解决了能源利用，却带来了全球变暖，核能用来代替作为环保的清洁能源却带来了核废料丢弃的问题，全球化航空交通也带来了全世界范围内传染病加速感染蔓延的可能性。&lt;/p&gt;
+
+&lt;p&gt;怎样看待技术？依然是 个ongoing topic, 我依然认同KK在《失控》中说的，也是布莱恩在这本书里的观点：技术诞生于一种混乱，失控的活力中，也许工程师很希望世界是由理性和简单性所统辖，或者追求一种纯粹确定的秩序。但我倾向于布莱恩的复杂性理论对这个世界的解释：&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;我喜欢的元素是杂交的而不是纯粹的;是妥协折中的而不是一以贯之的；是曲折蜿蜒的而不是直截了当的；是模糊歧义的，而不是清晰缜密的。它们既客观又倔强，它们既无聊又有趣。它们是依惯例传统的而不是设计出来的；是冗余累赘的而不是简洁单纯的。它们既残缺不全又富于创新，是前后矛盾，模棱两口的而不是直接的和清楚的。我赞同凌乱的活力优于明显的统一，我容纳不合理的结论。我赞成丰富和含义深长远胜于含义清楚，我既赞同隐含的功能，又赞同外显的功能。&lt;/p&gt;
+&lt;/blockquote&gt;</content><author><name></name></author><category term="reading" /><category term="review" /><summary type="html">从KK的《失控》那里了解到复杂性科学， 顺便入了网络科学和复杂经济学的坑， 不知道怎么就找到了这本布莱恩的《技术的本质》。 看这本书拖拉了很久， 但也确实看得津津有味， 因为试着将布莱恩提出的理论套用在平时学习和工作中产生的一些疑惑上， and some parts seem fair enough.</summary></entry><entry xml:lang="en"><title type="html">Passive Activity Classification of Smart Homes through Wireless Packet Sniffing</title><link href="http://localhost:4000/blog/2020/07/04/passive-activity-classification-of-smart-homes-through-wireless-packet-sniffing" rel="alternate" type="text/html" title="Passive Activity Classification of Smart Homes
+through Wireless Packet Sniffing" /><published>2020-07-04T00:00:00+08:00</published><updated>2020-07-04T00:00:00+08:00</updated><id>http://localhost:4000/blog/2020/07/04/passive-activity-classification-of-smart-homes-through-wireless-packet-sniffing</id><content type="html" xml:base="http://localhost:4000/blog/2020/07/04/passive-activity-classification-of-smart-homes-through-wireless-packet-sniffing">&lt;p&gt;This post is to sum up my capstone project for the last semester of my postgraduate. Due to the COV-19 pandemic, I have to study remotely the whole semester, which might also be the possible reason that I have been less productive in the past six months.  Well then, just a little record here.&lt;/p&gt;
+&lt;h1 id=&quot;motivations-of-this-project&quot;&gt;Motivations of This Project&lt;/h1&gt;
+&lt;p&gt;As the title tells, the main reason I chose this project is to have more understanding of IoT security.  Actually, it is believed that increasing popularity of IoT devices raises security concerns.&lt;/p&gt;
+
+&lt;p&gt;In the real-world scenario of most devices connected via WiFi networks, despite that related exchanged information is masked using encryption protocols like WPA2 protocol, sensitive meta-data (e.g., packet lengths, traffic rate) of the network traffic can still be leaked during the transmission, which can result in vulnerabilities such as side-channel attacks.&lt;/p&gt;
+
+&lt;p&gt;Thus, we are motivated to take a deep look into sensitive information exposure from smart devices such as device activities detection through WiFi side-channels using machine learning techniques.&lt;/p&gt;
+
+&lt;h1 id=&quot;our-objectives&quot;&gt;Our Objectives&lt;/h1&gt;
+&lt;ul&gt;
+  &lt;li&gt;Collect a sufficient amount of data of IoT devices: Using various types of
+smart devices to set up an ideal environment to collect their data over the Wifi
+network.&lt;/li&gt;
+  &lt;li&gt;Data cleaning and Processing: Clean the collected data and create pickle
+(such as average number of packets in iterations) data in order to train
+machine learning models.&lt;/li&gt;
+  &lt;li&gt;Training the Architecture: Train CNN model with pickle data to identify smart
+devices.&lt;/li&gt;
+  &lt;li&gt;Evaluate the outcome of the experiment: Check the outcome of CNN model to
+make improvement&lt;/li&gt;
+  &lt;li&gt;Make feasible improvements: Adjust CNN model to equip with our pickle data
+to increase accuracy&lt;/li&gt;
+  &lt;li&gt;Collect concept drift data: Collect more data for better performance.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;related-work&quot;&gt;Related Work&lt;/h1&gt;
+&lt;h2 id=&quot;previous-work&quot;&gt;Previous work&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;Abbas Acar et al, 2018, “Peek-a-Boo: I see your smart home activities, even
+encrypted!”
+    &lt;ul&gt;
+      &lt;li&gt;Propose a way to infer ongoing user activities in a smart home&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Payap Sirinam et al, 2018, “Deep Fingerprinting: Undermining Website Fingerprinting
+Defenses with Deep Learning”
+    &lt;ul&gt;
+      &lt;li&gt;Propose the Deep Fingerprinting (DF) model based on a Convolutional Neural
+Network (CNN) for identifying encrypted network traffic.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;our-work&quot;&gt;Our work&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;Combine these work above for passive activity classification of smart homes
+through wireless packet sniffing.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;data--how-we-captured-and-why&quot;&gt;Data – How We Captured And Why&lt;/h1&gt;
+&lt;p&gt;The major activities involved in accomplishing this task are capturing sufficient amounts of data, performing data cleansing and using deep learning techniques to classify data instances into predefined activity classes. Further, the data capturing process has been bifurcated into three categories – capture first iteration of 1000 traces of each category and start training the existing deep learning model on this data, run further iterations of 1000 traces every week towards concept-drift datasets and plan some sequence of multiple activities depicting a real-life scenario followed by capturing data for these sequences.&lt;/p&gt;
+
+&lt;p&gt;In our work, we mainly focus on the deep learning techniques that previous work has shown to be promising for network traffic identification. We first remove any packets with “badFCS” flags as these are corrupted packets, then we process data by extracting packet lengths and polarity for each packet using Python scripts, here the term “polarity” means the direction of traffic, which could be incoming (from the router to the smart device) or outgoing (from the smart device to the router). Each packet in captured traces (pcap file) is converted as in following format:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;pkt = [(direction)packet length], where the direction is 1(-1) if it is an incoming
+(outgoing) packet.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Deep Fingerprinting facilitates an attacker to understand the usage pattern in a certain setup. Though the data transfer to/from IoT devices is encrypted and highly secure, yet the signature of devices itself reveal much about the user(s). For instance, the type of device clubbed with its usage timing pattern could help establish presence/absence of the user within the setting. Hence, Deep Fingerprinting turns out to be our preferred choice in classifying attack vectors.&lt;/p&gt;
+
+&lt;p&gt;Convolutional neural networks have a unique ability to retain spatial information through filter kernels. Moreover, the salient features extracted by convolutional kernels are translation invariant. As we understand the limitations of CNN with regards to the amount of data required, we make our best efforts to capture data in bulk and evaluate model performance by using all data together as well as using data from different days to evaluate the model performance in a chronological arrangement.&lt;/p&gt;
+
+&lt;p&gt;We concentrated on capturing 802.11 Wi-Fi data from voice assistants (Google home and Amazon Echo) using them in stand-alone settings like asking general questions related to weather, jokes, facts, etc or executing commands like setting up alarm, playing music, etc. Another type of instructions is the one used to control other smart home devices like smart lights, smart plugs. While these commands/instructions were being executed by voice assistants, we sniffed traffic data passively to record the timing and size of packets for each transaction. The sniffing process is designed so as to filter data related to our devices only and avoid any noise of irrelevant devices. This is done by filtering packets based on source and destination MAC addresses and capturing only 802.11 QoS data frames.&lt;/p&gt;
+
+&lt;h1 id=&quot;data-analysis&quot;&gt;Data Analysis&lt;/h1&gt;
+&lt;p&gt;In this project, the data collection process can be divided into two parts: individual activity data and sequence activity data.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Individual Activities&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Capture data in .PCAP format&lt;/li&gt;
+  &lt;li&gt;Generate pickle files with polarity assigned&lt;/li&gt;
+  &lt;li&gt;Manually point hardware to monitor desired Wi-Fi channel&lt;/li&gt;
+  &lt;li&gt;Continue data capture across multiple weeks to observe effect of concept drift&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;Sequence of Activities&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Design four sequences simulating real-world scenarios&lt;/li&gt;
+  &lt;li&gt;Capture traces for 1000 iterations for each sequence&lt;/li&gt;
+  &lt;li&gt;Use multi-threading and call sub-process to ensure parallel processing&lt;/li&gt;
+  &lt;li&gt;Setup routines with voice assistants to automate sequencing&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;data-analysis---individual-activities&quot;&gt;Data Analysis - Individual Activities&lt;/h2&gt;
+&lt;p&gt;The characteristics of the network traces used in the experiments
+&lt;img src=&quot;/img/table1.png&quot; alt=&quot;&quot; /&gt;
+&lt;img src=&quot;/img/table2.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;With the characteristics of the network traces used in the experiments analysed above, we need to then select packet sizes from each instance as the input vector and normalize it. This is decided by applying statistics on the data from Google Home and Amazon Echo separately, the results are presented in the table below. Here, the most important statistical results are considered as mean value and standard deviation value, as we need to make the input global size less than the sum of mean value and standard deviation value considering the data balance. Due to the space limit, we only take the data of the first week (April 18) as the sample dataset to apply such statistics. As shown in the last row of table, the chosen input size of Amazon Echo dataset is 300 while Google Home dataset is 600.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/table3.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;h1 id=&quot;results&quot;&gt;Results&lt;/h1&gt;
+&lt;p&gt;After analysing and processing captured data, we build the DF model for individual activities based on CNN model and investigate the related performance. In this section, we introduce the evaluated results from different perspectives. First, we give the overall results of our optimized model on different dataset and evaluation metrics, then we inspect the performance of hyperparameter tuning to decide the optimized model.&lt;/p&gt;
+
+&lt;p&gt;The hyperparameters of CNN model we used:
+&lt;img src=&quot;/img/table4.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;evaluation---individual-activities&quot;&gt;Evaluation - Individual Activities&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;Overall Results of device by datasets&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;During the training process, the training set is the actual dataset that we use to train the model, in which the model sees and learns from this data. The validation dataset is used to evaluate a given model, but this is for frequent evaluation, which means the model occasionally sees this data, but never does it “Learn” from this. We usually use the validation set results to update higher level hyperparameters and plot training accuracy for further analysis. So the validation set is considered to affect a model in an indirect way. While the testing set is only used once the model is completely trained (using the train and validation sets), this is to say, the testing accuracy in the table indicates the evaluation on the testing set.&lt;/p&gt;
+
+&lt;p&gt;As presented in the table below. We can conclude that the optimised performance of our final model is around 83% given the testing accuracy as the evaluation metrics.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/table5.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Timing effect evaluation&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;Also, since we collected and updated the data weekly, we would like to inspect the impact of timing on the performance. To examine this, we implement the classifier obtained from the data of the first week (April 18) to evaluate the performance on the datasets over time. Worth mentioning, as shown above the testing accuracy of Amazon Echo dataset is meaninglessly low around 37%, we exclude it here to focus more on valuable results.&lt;/p&gt;
+
+&lt;p&gt;The related results are presented in the table below, to give us more observation of our model, we bring in the evaluation metrics: precision, recall and F1 score. However, the conclusion can be summarised that the performance of these metrics is considerably lower than the testing accuracy. Also, we could find that the performance has slightly improved over time for most evaluation metrics.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/table6.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Volume effect evaluation&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;The volume of data is also considered to be an important influence factor for performance. To examine this, we implement the classifier obtained from different volumes of datasets to evaluate the performance. Due to technical issues, the data of Amazon Echo dataset is incomplete for all 10 activities, so it is excluded here. As shown in the table below, we increase the volume of data by merging several datasets together, for example, dataset April18_May01 means the combination of dataset April18 and dataset May01. The dataset split for testing is same as described before, it is indicated that the performance is slightly improved with the increasing volume of data.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/table7.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;h1 id=&quot;limitations-and-future-work&quot;&gt;Limitations And Future Work&lt;/h1&gt;
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;Lack of time to model sequence activities&lt;/em&gt;&lt;/strong&gt;. Though we designed the experiments to collect sequence activity data, we only managed to analyze the data by plotting the IO graphs due to the time limit of this project. While the initial vision is to first extract the correlated timing features to be used to model sequence activities, and this could be the future research direction.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;Overfitting problem in our developed model.&lt;/em&gt;&lt;/strong&gt;  The performance of classifying individual activities still has a lot of space to improve as we have already discussed above, solving overfitting would be the key task in the future.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;Incomplete data due to technical issues&lt;/em&gt;&lt;/strong&gt;. Due to technical issues and device usage conflicts, the amount of data for Amazon Echo is incomplete and much less than Google home. And somehow this influences the later performance of classification.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;Lack of relevant literature to set hyperparameters in the CNN model.&lt;/em&gt;&lt;/strong&gt; A lack of relevant literature from similar projects enabled several tasks to perform different tests using different parameters. In that way, we could compare results and decide which optimal values could deal with the overfitting and keep a good accuracy. Fortunately, an initial CNN model was shared by the client, then some parameters were taken as a reference to be improved according to the captured IoT wireless data for the current project.&lt;/p&gt;
+
+&lt;p&gt;To summarize, for future work, we are planning to model the sequence activities data using the machine learning models that advantage in time series data. Also, we aim to increase the generalizability of the classifier by collecting data under different networks and in different time frames. We will also investigate the limits of the current CNN model in terms of hyperparameter tuning.&lt;/p&gt;</content><author><name></name></author><category term="IoT" /><category term="WiFi" /><category term="Sniffing" /><category term="AI" /><summary type="html">This post is to sum up my capstone project for the last semester of my postgraduate. Due to the COV-19 pandemic, I have to study remotely the whole semester, which might also be the possible reason that I have been less productive in the past six months. Well then, just a little record here. Motivations of This Project As the title tells, the main reason I chose this project is to have more understanding of IoT security. Actually, it is believed that increasing popularity of IoT devices raises security concerns.</summary></entry></feed>

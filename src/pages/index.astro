@@ -1,0 +1,117 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('blog')).sort(
+	(a, b) => {
+        const dateA = a.data.pubDate || new Date(0);
+        const dateB = b.data.pubDate || new Date(0);
+        return dateB.valueOf() - dateA.valueOf();
+    }
+);
+
+const latestPost = posts[0];
+const { Content } = await latestPost.render();
+---
+
+<Layout title="Sally Kang">
+    {latestPost ? (
+        <article class="latest-post">
+            <header class="post-header">
+                <h2 class="post-title">
+                    <a href={`/blog/${latestPost.slug}/`}>{latestPost.data.title}</a>
+                </h2>
+                {latestPost.data.pubDate && (
+                    <p class="post-meta">
+                        By <a href="/about" class="author-link">Sally Kang</a>
+                    </p>
+                )}
+            </header>
+            
+            <div class="post-content prose">
+                <Content />
+            </div>
+            
+            <footer class="post-footer">
+                <p>
+                    Read more posts in the <a href="/archive">archives</a>.
+                </p>
+            </footer>
+        </article>
+    ) : (
+        <p>No posts found.</p>
+    )}
+</Layout>
+
+<style>
+    .latest-post {
+        max-width: 100%;
+    }
+    
+    .post-header {
+        text-align: center;
+        margin-bottom: 3rem;
+    }
+    
+    .post-title {
+        font-family: 'Crimson Pro', Georgia, serif;
+        font-size: 2.2rem;
+        font-weight: 500;
+        line-height: 1.25;
+        margin: 0 0 0.5rem 0;
+    }
+    
+    .post-title a {
+        color: #111;
+        text-decoration: none;
+        transition: color 0.2s ease;
+    }
+    
+    .post-title a:hover {
+        color: #c9a961;
+    }
+    
+    .post-meta {
+        font-style: italic;
+        color: #888;
+        font-size: 1rem;
+        margin: 0;
+    }
+    
+    .author-link {
+        color: #888;
+        text-decoration: none;
+    }
+    
+    .author-link:hover {
+        color: #c9a961;
+    }
+    
+    .post-content {
+        margin-top: 2rem;
+    }
+    
+    .post-footer {
+        margin-top: 4rem;
+        padding-top: 2rem;
+        border-top: 1px solid #e5e5e5;
+        text-align: center;
+    }
+    
+    .post-footer p {
+        font-style: italic;
+        color: #888;
+        font-size: 1rem;
+    }
+    
+    .post-footer a {
+        color: #888;
+        text-decoration: underline;
+        text-decoration-color: #c9a961;
+        text-underline-offset: 3px;
+    }
+    
+    .post-footer a:hover {
+        color: #c9a961;
+    }
+</style>

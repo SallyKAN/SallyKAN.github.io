@@ -1,0 +1,50 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+@theme {
+  --font-serif: 'Crimson Pro', Georgia, 'Times New Roman', serif;
+  --font-display: 'Cormorant Garamond', Georgia, serif;
+  --font-sans: system-ui, -apple-system, sans-serif;
+}
+
+/* ========================================
+   Base Reset & Typography
+   ======================================== */
+
+:root {
+    --color-text: #333;
+    --color-heading: #111;
+    --color-muted: #888;
+    --color-accent: #c9a961;
+    --color-bg: #fefefe;
+    --color-border: #e5e5e5;
+}
+
+body {
+    font-family: var(--font-serif);
+    line-height: 1.75;
+    font-size: 19px;
+    color: var(--color-text);
+    background: var(--color-bg);
+}
+
+/* Selection highlight */
+::selection {
+    background: rgba(201, 169, 97, 0.25);
+}
+
+/* Smooth scrolling */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Links base style */
+a {
+    color: var(--color-text);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+a:hover {
+    color: var(--color-accent);
+}

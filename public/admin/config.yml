@@ -1,0 +1,29 @@
+backend:
+  name: git-gateway
+  branch: main
+
+# 本地开发时使用
+local_backend: true
+
+# 使用 Cloudinary 作为图床
+media_library:
+  name: cloudinary
+  config:
+    cloud_name: dy5vgnk1e
+    api_key: "335282199633685"
+
+collections:
+  - name: "blog"
+    label: "Blog Posts"
+    folder: "src/content/blog"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    extension: "md"
+    format: "frontmatter"
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Publish Date", name: "pubDate", widget: "datetime", date_format: "YYYY-MM-DD", time_format: false, format: "YYYY-MM-DD" }
+      - { label: "Description", name: "description", widget: "string", required: false }
+      - { label: "Layout", name: "layout", widget: "hidden", default: "post" }
+      - { label: "Tags", name: "tags", widget: "list", required: false }
+      - { label: "Body", name: "body", widget: "markdown" }

@@ -1,0 +1,180 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="About - Sally Kang">
+	<article class="about-page prose">
+        <h2>About</h2>
+        
+        <div class="intro">
+            <p>
+                这个博客网站的内容起源于我的学生时代，那是一个 ChatGPT 还没发布的时代，很多和我一样的人还在互联网上发布着原创的，粗糙的，不知所云的内容，甚至不足以被当作训练 AI 的语料。
+            </p>
+            <p class="en">
+                The content of this blog dates back to my student days — an era before ChatGPT existed, when many people like me were still publishing original, rough, and sometimes incoherent content on the internet, barely worthy of being used as AI training data.
+            </p>
+        </div>
+        
+        <div class="intro">
+            <p>
+                这里大部分内容是在我工作前对于编程、cool shit、AI 学习、一些好看的书的分享，还有很早之前我想炫耀其实不值一提的学生时代做的项目作业。然而我个人最大的成就感，来自于 2023 年给一个很酷的开源项目提的被接纳的 PR：<a href="https://github.com/checkpoint-restore/criu/pull/2301">CRIU #2301</a>
+            </p>
+            <p class="en">
+                Most of the content here consists of things from before I started working: programming notes, cool shit, AI learning, book recommendations, and some student projects I once wanted to show off but now seem trivial. Yet my greatest sense of accomplishment comes from a PR I submitted to a cool open-source project in 2023 that got accepted: <a href="https://github.com/checkpoint-restore/criu/pull/2301">CRIU #2301</a>
+            </p>
+        </div>
+        
+        <div class="intro">
+            <p>
+                以 2020 为分界线，工作后我还剩一些微弱的创作欲和表达欲，所以我会继续折腾一些新的项目，努力让自己很早的一些之前的 idea "被看见"。
+            </p>
+            <p class="en">
+                Taking 2020 as a dividing line, I still have a faint desire to create and express after starting work. So I'll continue tinkering with new projects, striving to make some of my early ideas "be seen."
+            </p>
+        </div>
+        
+        <blockquote class="motto">
+            <p>记录本身，即是反抗。</p>
+            <p class="en">To document is to resist.</p>
+        </blockquote>
+        
+        <h3>Find Me</h3>
+        
+        <div class="social-links">
+            <a href="https://github.com/SallyKAN">GitHub</a>
+            <span class="separator">·</span>
+            <a href="https://twitter.com/SillyK8">Twitter</a>
+            <span class="separator">·</span>
+            <a href="https://www.instagram.com/snape_kang/">Instagram</a>
+            <span class="separator">·</span>
+            <a href="https://www.douban.com/people/snapek/">豆瓣</a>
+            <span class="separator">·</span>
+            <a href="https://rss.app/feeds/FRwQ00sbDQutUgKj.xml">RSS</a>
+            <span class="separator">·</span>
+            <a href="mailto:snapekang@gmail.com">Email</a>
+        </div>
+        
+        <h3>About This Site</h3>
+        
+        <ul>
+            <li>Licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/deed.en_US">Creative Commons Attribution 3.0 Unported License</a>.</li>
+            <li>Powered by <a href="https://astro.build/">Astro</a></li>
+            <li>Hosted on <a href="https://github.com/SallyKAN/SallyKAN.github.io">GitHub</a> (thanks to <a href="https://pages.github.com/">GitHub Pages</a>)</li>
+            <li>A work in progress</li>
+        </ul>
+	</article>
+</Layout>
+
+<style>
+    .about-page {
+        max-width: 100%;
+    }
+    
+    .about-page h2 {
+        font-family: 'Cormorant Garamond', Georgia, serif;
+        font-size: 2.2rem;
+        font-weight: 400;
+        color: #111;
+        margin: 0 0 2rem 0;
+        text-align: center;
+    }
+    
+    .intro {
+        margin-bottom: 2rem;
+    }
+    
+    .intro p {
+        font-family: 'Nunito Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        font-size: 18px;
+        font-weight: 300;
+        color: #333;
+        line-height: 1.5;
+        margin-bottom: 0.8rem;
+    }
+    
+    .intro p.en {
+        font-size: 18px;
+        color: #555;
+        margin-bottom: 0;
+    }
+    
+    .motto {
+        border-left: 3px solid #c9a961;
+        padding: 1rem 1.5rem;
+        margin: 2.5rem 0;
+        background: #faf9f7;
+    }
+    
+    .motto p {
+        font-family: 'Nunito Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        font-size: 20px;
+        font-weight: 400;
+        color: #333;
+        margin: 0;
+        line-height: 1.5;
+    }
+    
+    .motto p.en {
+        font-size: 20px;
+        font-weight: 300;
+        color: #555;
+        margin-top: 0.5rem;
+    }
+    
+    .about-page h3 {
+        font-family: 'Nunito Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        font-size: 20px;
+        font-weight: 600;
+        color: #111;
+        margin: 2rem 0 1rem 0;
+    }
+    
+    .social-links {
+        font-family: 'Nunito Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        font-size: 18px;
+        line-height: 2;
+        margin-bottom: 1.5rem;
+    }
+    
+    .social-links a {
+        color: #333;
+        text-decoration: none;
+        transition: color 0.2s ease;
+    }
+    
+    .social-links a:hover {
+        color: #c9a961;
+    }
+    
+    .social-links .separator {
+        color: #ccc;
+        margin: 0 0.5rem;
+    }
+    
+    .about-page ul {
+        list-style: disc;
+        padding-left: 1.5rem;
+        margin: 0 0 1.5rem 0;
+    }
+    
+    .about-page li {
+        font-family: 'Nunito Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        font-size: 18px;
+        font-weight: 300;
+        color: #333;
+        line-height: 1.5;
+        margin-bottom: 0.3rem;
+    }
+    
+    .about-page a {
+        color: #333;
+        text-decoration: underline;
+        text-decoration-color: #c9a961;
+        text-underline-offset: 3px;
+        transition: all 0.2s ease;
+    }
+    
+    .about-page a:hover {
+        color: #c9a961;
+    }
+</style>

@@ -1,0 +1,177 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Projects - Sally Kang">
+	<article class="projects-page">
+        <h2 class="page-title">Projects</h2>
+        
+        <div class="projects-content">
+            <h3>2019</h3>
+            
+            <h4>November</h4>
+            <div class="project-item">
+                <a href="/blog/2019-11-05-tor-network-malicious-exit-relay-and-dns-resolution">The Tor Network: Malicious Exit Relay and DNS Resolution</a>
+                <p>In this project, we attempt to monitor and analysis Tor exit relays by detecting the malicious exit relays and looking into the DNS resolution. See more information for our <a href="https://github.com/SallyKAN/exitmap">code</a> based on <a href="https://github.com/NullHypothesis/exitmap">exitmap</a>, also the <a href="https://docs.google.com/presentation/d/1ddLmLj0t3IJYAGbrHtfkZCKFdivMEE_iOZmfpGcHfMc/edit?usp=sharing">slides</a> of our work.</p>
+            </div>
+            
+            <h4>October</h4>
+            <div class="project-item">
+                <a href="https://github.com/SallyKAN/advanced_data_model">A Demonstration of NoSQL (MongoDB and Neo4j)</a>
+                <p>This is a demonstration of working with both MongoDB and Neo4j in terms of designing suitable schema and writing practical queries.</p>
+            </div>
+            
+            <h4>September</h4>
+            <div class="project-item">
+                <a href="https://github.com/SallyKAN/http_scanner">A Simple HTTP Scanner Written in Go</a>
+            </div>
+            
+            <h3>2018</h3>
+            
+            <h4>October</h4>
+            <div class="project-item">
+                <a href="https://github.com/SallyKAN/Softmax-Classifier">A Simple Softmax Classifier</a>
+                <p>Build a Softmax classifier for fashion MNIST dataset</p>
+            </div>
+            
+            <div class="project-item">
+                <a href="https://github.com/SallyKAN/A-Simple-CNN">A Simple Neural Network</a>
+                <p>This is a very simple, three-layer neural network implemented with Pytorch. The dataset used here is the CIFAR-10 image dataset.</p>
+            </div>
+            
+            <h3>2017</h3>
+            
+            <h4>November</h4>
+            <div class="project-item">
+                <a href="https://www.youtube.com/watch?v=ILngLg0-YTY">University Forum Website</a>
+                <p>An online forum website for university students to exchange and share information, written in Java and powered by SpringMVC framework. <a href="https://bitbucket.org/elec5619csd/usydconnect">See more information</a></p>
+            </div>
+            
+            <h4>September</h4>
+            <div class="project-item">
+                <a href="http://18.221.229.101/">UniConnect</a>
+                <p>Yep, another forum website demo written in Python and powered by Django framework. <a href="https://bitbucket.org/elec3609_group7/uniconnect">See more information</a></p>
+            </div>
+            
+            <h3>2016</h3>
+            
+            <h4>December</h4>
+            <div class="project-item">
+                <a href="https://github.com/SallyKAN/Simple-RISC-processor">Demo of A Simple RISC Processor</a>
+                <p>This project is for the course computer architecture. My work is to design and implement a complete single-cycle processor that can execute a simple demo program. <a href="https://github.com/SallyKAN/Simple-RISC-processor">See more information</a></p>
+            </div>
+            
+            <h4>June</h4>
+            <div class="project-item">
+                <a href="https://www.youtube.com/watch?v=B_obBgOSR5I&t=67s">Arduino-based 3D Game Machine</a>
+                <p>This project is to make a gamepad for playing Tetris game on the computer by implementing Arduino and a 3D accelerator.</p>
+            </div>
+            
+            <h3>Miscellaneous</h3>
+            
+            <div class="project-item">
+                <a href="https://twitter.com/ChouAmazing">Lyrics of Jay Chou</a>
+                <p>A twitter bot randomly posting a line of lyrics from Jay Chou's songs.</p>
+            </div>
+            
+            <div class="project-item">
+                <a href="/sydney-heartbeat/">Sydney-heartbeat</a>
+                <p>Inspired by <a href="https://twitter.com/oobr">Oliver O'Brien</a>'s work: <a href="http://tubeheartbeat.com/london/">London tube heartbeat</a>, a fascinating visual work of London Underground network. Try to display a similar visualization of sydney train network.</p>
+            </div>
+            
+            <div class="project-item">
+                <a href="https://github.com/SallyKAN/InterestingPython/blob/master/weixin_friends_analysis">Analysis WeChat Friends</a>
+            </div>
+            
+            <div class="project-item">
+                <a href="https://github.com/SallyKAN/InterestingPython/blob/master/QQZone/qzone.py">Get QQZone Shit Back</a>
+            </div>
+            
+            <div class="project-item">
+                <a href="https://github.com/SallyKAN/InterestingPython/blob/master/douban/doubanSpider.py">Get The Most Popular Movies From Douban</a>
+            </div>
+            
+            <div class="project-item">
+                <a href="https://github.com/SallyKAN/Douban_Lookup">Checking Douban Movie Rating From Terminal</a>
+            </div>
+            
+            <div class="project-item">
+                <a href="https://github.com/SallyKAN/InterestingPython/blob/master/weibo/weibo_driver.py">Get Weibo Shit Back</a>
+            </div>
+        </div>
+	</article>
+</Layout>
+
+<style>
+    .projects-page {
+        max-width: 100%;
+    }
+    
+    .page-title {
+        font-family: 'Cormorant Garamond', Georgia, serif;
+        font-size: 2.2rem;
+        font-weight: 400;
+        color: #111;
+        margin: 0 0 2rem 0;
+        text-align: center;
+    }
+    
+    .projects-content h3 {
+        font-family: 'Nunito Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        font-size: 22px;
+        font-weight: 400;
+        color: #111;
+        margin: 2rem 0 0.8rem 0;
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid #ddd;
+    }
+    
+    .projects-content h3:first-child {
+        margin-top: 0;
+    }
+    
+    .projects-content h4 {
+        font-family: 'Nunito Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        font-size: 18px;
+        font-weight: 600;
+        color: #555;
+        margin: 1rem 0 0.5rem 0;
+    }
+    
+    .project-item {
+        margin-bottom: 0.8rem;
+    }
+    
+    .project-item > a {
+        font-family: 'Nunito Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        font-size: 18px;
+        font-weight: 400;
+        color: #333;
+        text-decoration: none;
+        transition: color 0.2s ease;
+    }
+    
+    .project-item > a:hover {
+        color: #c9a961;
+    }
+    
+    .project-item p {
+        font-family: 'Nunito Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        font-size: 18px;
+        font-weight: 300;
+        color: #666;
+        margin: 0.2rem 0 0 0;
+        line-height: 1.5;
+    }
+    
+    .project-item p a {
+        color: #666;
+        text-decoration: underline;
+        text-decoration-color: #c9a961;
+        text-underline-offset: 2px;
+    }
+    
+    .project-item p a:hover {
+        color: #c9a961;
+    }
+</style>

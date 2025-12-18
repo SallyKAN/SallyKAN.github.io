@@ -1,0 +1,238 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('blog')).sort(
+	(a, b) => {
+        const dateA = a.data.pubDate || new Date(0);
+        const dateB = b.data.pubDate || new Date(0);
+        return dateB.valueOf() - dateA.valueOf();
+    }
+);
+
+// Group by Year -> Month
+const archiveMap = posts.reduce((acc, post) => {
+    const date = post.data.pubDate || new Date(0);
+    const year = date.getFullYear();
+    const month = date.toLocaleString('en-US', { month: 'long' });
+    const monthNum = date.getMonth();
+
+    if (!acc[year]) {
+        acc[year] = {
+            year,
+            months: {}
+        };
+    }
+    
+    if (!acc[year].months[month]) {
+        acc[year].months[month] = {
+            name: month,
+            order: monthNum,
+            posts: []
+        };
+    }
+    
+    acc[year].months[month].posts.push(post);
+    return acc;
+}, {} as Record<number, { year: number, months: Record<string, { name: string, order: number, posts: typeof posts }> }>);
+
+const years = Object.values(archiveMap).sort((a, b) => b.year - a.year);
+---
+
+<Layout title="Archives - Sally Kang">
+    <div class="archive-page">
+        <h2 class="page-title">Archives</h2>
+        
+        <!-- Search Box -->
+        <div class="search-container">
+            <input 
+                type="text" 
+                id="search-input" 
+                class="search-input" 
+                placeholder="Search posts..."
+            />
+        </div>
+        
+        <div class="archive-content" id="archive-content">
+            {years.map(yearGroup => {
+                const months = Object.values(yearGroup.months).sort((a, b) => b.order - a.order);
+                return (
+                    <section class="year-section" data-year={yearGroup.year}>
+                        <h3 class="year-title">{yearGroup.year}</h3>
+                        
+                        {months.map(month => (
+                            <div class="month-group" data-month={month.name}>
+                                <h4 class="month-title">{month.name}</h4>
+                                {month.posts.map(post => (
+                                    <p class="post-item" data-title={post.data.title.toLowerCase()}>
+                                        <span class="post-day">
+                                            {post.data.pubDate ? post.data.pubDate.getDate().toString().padStart(2, '0') : ''}
+                                        </span>
+                                        <a href={`/blog/${post.slug}/`} class="post-link">
+                                            {post.data.title}
+                                        </a>
+                                    </p>
+                                ))}
+                            </div>
+                        ))}
+                    </section>
+                );
+            })}
+        </div>
+        
+        <div id="no-results" class="no-results" style="display: none;">
+            No posts found.
+        </div>
+    </div>
+</Layout>
+
+<script>
+    const searchInput = document.getElementById('search-input') as HTMLInputElement;
+    const archiveContent = document.getElementById('archive-content');
+    const noResults = document.getElementById('no-results');
+    
+    searchInput?.addEventListener('input', (e) => {
+        const query = (e.target as HTMLInputElement).value.toLowerCase().trim();
+        const postItems = document.querySelectorAll('.post-item');
+        const monthGroups = document.querySelectorAll('.month-group');
+        const yearSections = document.querySelectorAll('.year-section');
+        
+        let visibleCount = 0;
+        
+        postItems.forEach((item) => {
+            const title = item.getAttribute('data-title') || '';
+            const matches = query === '' || title.includes(query);
+            (item as HTMLElement).style.display = matches ? '' : 'none';
+            if (matches) visibleCount++;
+        });
+        
+        // Hide empty month groups
+        monthGroups.forEach((group) => {
+            const visiblePosts = group.querySelectorAll('.post-item[style=""]').length + 
+                                 group.querySelectorAll('.post-item:not([style])').length -
+                                 group.querySelectorAll('.post-item[style="display: none;"]').length;
+            const hasVisible = Array.from(group.querySelectorAll('.post-item')).some(
+                (item) => (item as HTMLElement).style.display !== 'none'
+            );
+            (group as HTMLElement).style.display = hasVisible ? '' : 'none';
+        });
+        
+        // Hide empty year sections
+        yearSections.forEach((section) => {
+            const hasVisible = Array.from(section.querySelectorAll('.month-group')).some(
+                (group) => (group as HTMLElement).style.display !== 'none'
+            );
+            (section as HTMLElement).style.display = hasVisible ? '' : 'none';
+        });
+        
+        // Show/hide no results message
+        if (noResults) {
+            noResults.style.display = visibleCount === 0 && query !== '' ? 'block' : 'none';
+        }
+    });
+</script>
+
+<style>
+    .archive-page {
+        max-width: 100%;
+    }
+    
+    .page-title {
+        font-family: 'Cormorant Garamond', Georgia, serif;
+        font-size: 2.2rem;
+        font-weight: 400;
+        color: #111;
+        margin: 0 0 2rem 0;
+        text-align: center;
+    }
+    
+    .search-container {
+        margin-bottom: 2.5rem;
+    }
+    
+    .search-input {
+        width: 100%;
+        padding: 0.8rem 1rem;
+        font-family: 'Nunito Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        font-size: 18px;
+        font-weight: 300;
+        color: #333;
+        background: #fff;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        outline: none;
+        transition: border-color 0.2s ease;
+    }
+    
+    .search-input:focus {
+        border-color: #c9a961;
+    }
+    
+    .search-input::placeholder {
+        color: #999;
+    }
+    
+    .no-results {
+        text-align: center;
+        color: #888;
+        font-family: 'Nunito Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        font-size: 18px;
+        font-weight: 300;
+        font-style: italic;
+        padding: 2rem 0;
+    }
+    
+    .year-section {
+        margin-bottom: 1.5rem;
+    }
+    
+    .year-title {
+        font-family: 'Nunito Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        font-size: 22px;
+        font-weight: 400;
+        color: #111;
+        margin: 0 0 0.8rem 0;
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid #ddd;
+    }
+    
+    .month-group {
+        margin-bottom: 1rem;
+        margin-left: 0;
+    }
+    
+    .month-title {
+        font-family: 'Nunito Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        font-size: 18px;
+        font-weight: 600;
+        color: #555;
+        margin: 0 0 0.3rem 0;
+    }
+    
+    .post-item {
+        margin: 0;
+        padding: 0;
+        line-height: 1.5;
+    }
+    
+    .post-day {
+        font-family: 'Nunito Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        font-size: 18px;
+        font-weight: 300;
+        color: #888;
+        margin-right: 0.5rem;
+    }
+    
+    .post-link {
+        font-family: 'Nunito Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        font-size: 18px;
+        font-weight: 400;
+        color: #333;
+        text-decoration: none;
+        transition: color 0.2s ease;
+    }
+    
+    .post-link:hover {
+        color: #c9a961;
+    }
+</style>
